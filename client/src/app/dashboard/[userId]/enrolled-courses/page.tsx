@@ -1,6 +1,7 @@
 "use client";
 
 import { useData } from "@/context/Context";
+import { FetchLoading } from "@/utils/Loading";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -25,8 +26,6 @@ const Page = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [courses, setCourses] = useState<Course[]>([]);
-  const [selectedCourseId, setSelectedCourseId] = useState("");
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
 
@@ -60,8 +59,12 @@ const Page = () => {
 
       setCourses(data);
       setError("");
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong");
+      }
     } finally {
       setLoading(false);
     }
@@ -75,11 +78,21 @@ const Page = () => {
 
   // console.log(courses);
 
+  if (loading) {
+    return (
+      <div className=" h-[20rem] relative ">
+        <FetchLoading />
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className=" flex items-center justify-between ">
         <h3 className=" text-[1.3rem] font-medium ">All Enrolled Courses</h3>
       </div>
+
+      {error && <p className=" text-sm mt-2 text-red-500 ">{error}</p>}
 
       <div className=" mt-[2rem] flex justify-between gap-4 ">
         <div className=" w-full md:w-[40%] relative flex items-center gap-6  ">

@@ -63,8 +63,12 @@ const Page = () => {
       });
       // setModules(data.modules);
       setError("");
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong");
+      }
     } finally {
       setLoading(false);
     }
@@ -146,22 +150,31 @@ const Page = () => {
       // Show success toast
 
       // console.log(data);
-    } catch (error: any) {
-      console.error("Error:", error.message);
+    } catch (error: unknown) {
+      let message = "Failed to update course";
+
+      if (error instanceof Error && error.message) {
+        console.error("Error:", error.message);
+        message = error.message;
+      } else {
+        console.error("Error:", error);
+      }
+
       setToastMessage({
         type: "ERROR",
-        message: error.message || "Failed to update course",
+        message,
       });
-      toast.error(error.message || "Failed to update course");
+
+      toast.error(message);
     }
   };
 
-  if(loading){
-    return(
+  if (loading) {
+    return (
       <div className=" min-h-[20rem] relative ">
         <FetchLoading />
       </div>
-    )
+    );
   }
 
   return (
@@ -175,9 +188,7 @@ const Page = () => {
       </Link>
       <h3 className=" text-[1.2rem] ">Update Course</h3>
 
-      {
-        error && <p className=" text-sm text-red-500 mt-2 ">{error}</p>
-      }
+      {error && <p className=" text-sm text-red-500 mt-2 ">{error}</p>}
 
       <div className=" mt-10 ">
         <ImageUpload formData={formData} setFormData={setFormData} />

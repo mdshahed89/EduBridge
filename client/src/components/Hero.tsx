@@ -18,8 +18,8 @@ const Hero = () => {
             </h1>
             <p className="lg:text-left text-center my-[1.5rem] md:my-[2rem]">
               Access expert-led courses, track your progress, and gain in-demand
-              skills — all in one place. Whether you're growing your career or
-              exploring new passions, our platform makes learning flexible,
+              skills — all in one place. Whether you&apos;re growing your career
+              or exploring new passions, our platform makes learning flexible,
               practical, and empowering.
             </p>
 

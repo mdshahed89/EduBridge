@@ -26,9 +26,7 @@ const Courses = () => {
   const fetchCourses = async () => {
     try {
       const res = await fetch(
-        `${
-          process.env.NEXT_PUBLIC_BACKEND_URL
-        }/api/public/course`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/public/course`
       );
 
       const data = await res.json();
@@ -39,8 +37,12 @@ const Courses = () => {
 
       setCourses(data);
       setError("");
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong");
+      }
     } finally {
       setLoading(false);
     }
@@ -69,8 +71,8 @@ const Courses = () => {
         </h2>
         <p className="max-w-[35rem] mx-auto text-[#2c2c2c]">
           Browse a wide range of expert-led courses designed to help you
-          upskill, switch careers, or deepen your knowledge. Whether you're just
-          starting out or looking to grow, there's something here for everyone.
+          upskill, switch careers, or deepen your knowledge. Whether you&apos;re just
+          starting out or looking to grow, there&apos;s something here for everyone.
         </p>
       </div>
 

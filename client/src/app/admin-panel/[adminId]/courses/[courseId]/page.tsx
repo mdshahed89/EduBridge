@@ -63,8 +63,12 @@ const Page = () => {
       setCourse(data.course);
       setModules(data.modules);
       setError("");
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong");
+      }
     } finally {
       setLoading(false);
     }
@@ -105,9 +109,14 @@ const Page = () => {
       toast.success("New module added successfully!!");
       setTitle("");
       setShowModal(false);
-    } catch (error: any) {
-      // setToast();
-      toast.error(error.message || "Error occurred");
+    } catch (error: unknown) {
+      let message = "Error occurred";
+
+      if (error instanceof Error && error.message) {
+        message = error.message;
+      }
+
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -153,9 +162,13 @@ const Page = () => {
       fetchCourse();
       toast.success("Module Update Successfully!!");
       setShowEditModal(false);
-    } catch (error: any) {
-      // setToast();
-      toast.error(error.message || "Error occurred");
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error && error.message
+          ? error.message
+          : "Error occurred";
+
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -369,7 +382,10 @@ const Page = () => {
                     setShowDeleteModal(false);
                     setSelectedModule(null);
                     fetchCourse();
-                  } catch (err) {
+                  } catch (err: unknown) {
+                    if (err instanceof Error) {
+                      console.error("Delete module error:", err.message);
+                    }
                     toast.error("Failed to delete module", { id: toastId });
                   }
                 }}

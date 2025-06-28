@@ -57,8 +57,12 @@ const Page = () => {
 
       setCourses(data);
       setError("");
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong");
+      }
     } finally {
       setLoading(false);
     }
@@ -72,15 +76,13 @@ const Page = () => {
 
   // console.log(courses);
 
-  if(loading){
-    return(
+  if (loading) {
+    return (
       <div className=" min-h-[20rem] relative ">
         <FetchLoading />
       </div>
-    )
+    );
   }
-
-  
 
   return (
     <div>
@@ -88,9 +90,7 @@ const Page = () => {
         <h3 className=" text-[1.3rem] font-medium ">All Courses</h3>
       </div>
 
-      {
-        error && <p className=" text-sm mt-2 text-red-500 ">{error}</p>
-      }
+      {error && <p className=" text-sm mt-2 text-red-500 ">{error}</p>}
 
       <div className=" mt-[2rem] flex justify-between gap-4 ">
         <div className=" w-full md:w-[40%] relative flex items-center gap-6  ">

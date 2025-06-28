@@ -79,8 +79,12 @@ const Page = () => {
 
       setLectures(data);
       setError("");
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong");
+      }
     } finally {
       setLoading(false);
     }
@@ -144,11 +148,19 @@ const Page = () => {
         videoUrl: "",
         pdfNotes: [],
       });
-    } catch (err: any) {
-      console.error("Error creating lecture:", err.message);
+    } catch (err: unknown) {
+      let message = "Something went wrong";
+
+      if (err instanceof Error) {
+        message = err.message;
+        console.error("Error creating lecture:", err.message);
+      } else {
+        console.error("Error creating lecture:", err);
+      }
+
       setToastMessage({
         type: "Error",
-        message: err.message || "Something went wrong",
+        message,
       });
     }
   };
@@ -189,13 +201,13 @@ const Page = () => {
 
   // console.log(lectures);
 
-  if(loading){
-      return(
-        <div className=" min-h-[20rem] relative ">
-          <FetchLoading />
-        </div>
-      )
-    }
+  if (loading) {
+    return (
+      <div className=" min-h-[20rem] relative ">
+        <FetchLoading />
+      </div>
+    );
+  }
 
   return (
     <div className=" ">
@@ -218,9 +230,7 @@ const Page = () => {
         <h3 className=" text-[1.3rem] ">All Lectures</h3>
       </div>
 
-      {
-        error && <p className=" text-sm text-red-500 mt-2 ">{error}</p>
-      }
+      {error && <p className=" text-sm text-red-500 mt-2 ">{error}</p>}
 
       <div className=" min-h-[20rem] mt-[2rem] border p-[1rem] rounded-lg ">
         <div className=" my-3 flex justify-between gap-4 ">
@@ -370,8 +380,14 @@ const Page = () => {
                     setShowDeleteModal(false);
                     setSelectedLecture(null);
                     fetchLectures();
-                  } catch (err) {
-                    toast.error("Failed to delete lecture", { id: toastId });
+                  } catch (err: unknown) {
+                    let message = "Failed to delete lecture";
+
+                    if (err instanceof Error) {
+                      message = err.message;
+                    }
+
+                    toast.error(message, { id: toastId });
                   }
                 }}
                 className="px-4 py-2 bg-red-600 text-white rounded-md"
@@ -563,8 +579,8 @@ const Page = () => {
 export default Page;
 
 interface Props {
-  formData: any;
-  setFormData: (value: any) => void;
+  formData: LectureFormData;
+  setFormData: (value: LectureFormData) => void;
 }
 
 interface LectureEditModalProps {
@@ -649,11 +665,19 @@ const LectureEditModal: React.FC<LectureEditModalProps> = ({
       toast.success("Lecture Updated Successfully!!");
       fetchLectures();
       setShowEditModal(false);
-    } catch (err: any) {
-      console.error("Error creating lecture:", err.message);
+    } catch (err: unknown) {
+      let errorMessage = "Something went wrong";
+
+      if (err instanceof Error) {
+        console.error("Error creating lecture:", err.message);
+        errorMessage = err.message;
+      } else {
+        console.error("Error creating lecture:", err);
+      }
+
       setToastMessage({
         type: "Error",
-        message: err.message || "Something went wrong",
+        message: errorMessage,
       });
     }
   };
@@ -822,8 +846,14 @@ const MultiPdfUpload: React.FC<Props> = ({ formData, setFormData }) => {
       } else {
         setToastMessage({ type: "Error", message: "Failed to upload PDF." });
       }
-    } catch (err) {
-      setToastMessage({ type: "Error", message: "Upload failed." });
+    } catch (err: unknown) {
+      let message = "Upload failed.";
+
+      if (err instanceof Error && err.message) {
+        message = `Upload failed: ${err.message}`;
+      }
+
+      setToastMessage({ type: "Error", message });
     } finally {
       setLoading(false);
     }
@@ -940,10 +970,16 @@ const VideoUpload: React.FC<Props> = ({ formData, setFormData }) => {
           message: "Video upload failed.",
         });
       }
-    } catch (err) {
+    } catch (err: unknown) {
+      let message = "An error occurred while uploading.";
+
+      if (err instanceof Error && err.message) {
+        message = `An error occurred: ${err.message}`;
+      }
+
       setToastMessage({
         type: "Error",
-        message: "An error occurred while uploading.",
+        message,
       });
     } finally {
       setLoading(false);

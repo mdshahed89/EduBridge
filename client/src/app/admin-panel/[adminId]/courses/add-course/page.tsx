@@ -104,11 +104,19 @@ const Page = () => {
       // Show success toast
 
       // console.log(data);
-    } catch (error: any) {
-      console.error("Error:", error.message);
+    } catch (error: unknown) {
+      let message = "Failed to create course";
+
+      if (error instanceof Error && error.message) {
+        console.error("Error:", error.message);
+        message = error.message;
+      } else {
+        console.error("Error:", error);
+      }
+
       setToastMessage({
         type: "ERROR",
-        message: error.message || "Failed to create course",
+        message,
       });
     }
   };

@@ -28,7 +28,6 @@ const Page = () => {
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
 
   const fetchCourses = async () => {
-
     try {
       const res = await fetch(
         `${
@@ -44,15 +43,19 @@ const Page = () => {
 
       setCourses(data);
       setError("");
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong");
+      }
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-      fetchCourses();
+    fetchCourses();
   }, [userData, debouncedSearchQuery]);
 
   // console.log(courses);
@@ -73,77 +76,79 @@ const Page = () => {
         </h2>
         <p className="max-w-[35rem]  mx-auto text-[#2c2c2c]">
           Browse a wide range of expert-led courses designed to help you
-          upskill, switch careers, or deepen your knowledge. Whether you're just
-          starting out or looking to grow, there's something here for everyone.
+          upskill, switch careers, or deepen your knowledge. Whether you&apos;re
+          just starting out or looking to grow, there&apos;s something here for
+          everyone.
         </p>
       </div>
 
       {error && <p className=" text-sm text-red-500 mt-2  ">{error}</p>}
 
-      {
-        loading ? <div className=" relative min-h-[20rem] ">
-        <FetchLoading />
-      </div> : <div>
-      <div className=" mt-[4rem] flex justify-between gap-4 ">
-        <div className=" w-full  relative flex items-center gap-6  ">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search course..."
-            className=" w-full outline-none border-none py-2 pl-4 pr-[3rem] bg-[#F6F6FB] rounded-md "
-          />
-          <div className=" absolute top-0 right-0 px-4 h-full flex items-center  ">
-            <FiSearch className=" text-[#A6ABC8] text-[1.2rem] " />
-          </div>
+      {loading ? (
+        <div className=" relative min-h-[20rem] ">
+          <FetchLoading />
         </div>
-      </div>
-
-      <div className="mt-[2rem] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-        {courses.map((course, idx) => (
-          <div
-            key={idx}
-            className="w-full rounded-lg overflow-hidden border bg-white flex flex-col relative"
-          >
-            <div className="w-full h-[15rem] relative">
-              <Image
-                src={course.thumbnail}
-                alt="course thumbnail"
-                fill
-                className="object-cover"
+      ) : (
+        <div>
+          <div className=" mt-[4rem] flex justify-between gap-4 ">
+            <div className=" w-full  relative flex items-center gap-6  ">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search course..."
+                className=" w-full outline-none border-none py-2 pl-4 pr-[3rem] bg-[#F6F6FB] rounded-md "
               />
+              <div className=" absolute top-0 right-0 px-4 h-full flex items-center  ">
+                <FiSearch className=" text-[#A6ABC8] text-[1.2rem] " />
+              </div>
             </div>
+          </div>
 
-            <div className="flex flex-col justify-between h-full px-2 py-2 bg-gray-50 flex-1">
-              <div className="flex-1">
-                <div className=" text-[1.2rem] md:text-[1.4rem] font-medium line-clamp-1">
-                  {course.title}
+          <div className="mt-[2rem] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+            {courses.map((course, idx) => (
+              <div
+                key={idx}
+                className="w-full rounded-lg overflow-hidden border bg-white flex flex-col relative"
+              >
+                <div className="w-full h-[15rem] relative">
+                  <Image
+                    src={course.thumbnail}
+                    alt="course thumbnail"
+                    fill
+                    className="object-cover"
+                  />
                 </div>
-                <div className="text-[#414040] line-clamp-2">
-                  {course.description}
-                </div>
-                <div className="flex items-center gap-2 mt-3">
-                  <span className="text-[#0400ff]">${course.price}</span>
-                  <span className="line-through text-gray-500">
-                    ${Number(course.price + course.price * 0.3).toFixed(0)}
-                  </span>
+
+                <div className="flex flex-col justify-between h-full px-2 py-2 bg-gray-50 flex-1">
+                  <div className="flex-1">
+                    <div className=" text-[1.2rem] md:text-[1.4rem] font-medium line-clamp-1">
+                      {course.title}
+                    </div>
+                    <div className="text-[#414040] line-clamp-2">
+                      {course.description}
+                    </div>
+                    <div className="flex items-center gap-2 mt-3">
+                      <span className="text-[#0400ff]">${course.price}</span>
+                      <span className="line-through text-gray-500">
+                        ${Number(course.price + course.price * 0.3).toFixed(0)}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Button */}
+                  <Link
+                    href={`/courses/${course._id}`}
+                    className="mt-4 bg-[#0400ff] py-2 w-full block text-center rounded-md text-white active:scale-95 transition-all duration-300 ease-in-out"
+                  >
+                    View Details
+                  </Link>
                 </div>
               </div>
-
-              {/* Button */}
-              <Link
-                href={`/courses/${course._id}`}
-                className="mt-4 bg-[#0400ff] py-2 w-full block text-center rounded-md text-white active:scale-95 transition-all duration-300 ease-in-out"
-              >
-                View Details
-              </Link>
-            </div>
+            ))}
           </div>
-        ))}
-      </div>
-      </div>
-      }
-
+        </div>
+      )}
     </div>
   );
 };

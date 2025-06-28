@@ -125,8 +125,12 @@ const Page = () => {
       setSelectedLecture(data?.moduleWithLectures[0]?.lectures[0]);
       setEnrolledCourses(data?.enrolledCourses || []);
       setError("");
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong");
+      }
     } finally {
       setLoading(false);
     }
@@ -190,12 +194,12 @@ const Page = () => {
       return;
     }
 
-    const isAlreadyCompleted = (userData.enrolledCourses as any[])?.some(
-      (courseEntry: any) => {
+    const isAlreadyCompleted = enrolledCourses?.some(
+      (courseEntry: EnrolledCourse) => {
         return (
           courseEntry.course === courseId &&
           courseEntry.progress?.some(
-            (progressItem: any) =>
+            (progressItem: EnrolledLecture) =>
               progressItem.lecture === selectedLecture._id &&
               progressItem.completed
           )
@@ -232,13 +236,22 @@ const Page = () => {
       }
 
       console.log("Lecture Completed Successfully");
-    } catch (error: any) {
-      console.error("Error:", error.message);
+    } catch (error: unknown) {
+      let message = "Something went wrong!!";
+
+      if (error instanceof Error && error.message) {
+        console.error("Error:", error.message);
+        message = error.message;
+      } else {
+        console.error("Error:", error);
+      }
+
       setToastMessage({
         type: "ERROR",
-        message: error.message || "Something went wrong!!",
+        message,
       });
-      toast.error("Something went wrong!!");
+
+      toast.error(message);
     }
   };
 
@@ -510,7 +523,7 @@ const Page = () => {
             </div>
           ) : (
             <div className=" mt-[2rem] text-[1.2rem] font-medium text-[#5e5e5e] ">
-              There are no module's yet
+              There are no module&apos;s yet
             </div>
           )}
         </div>
@@ -586,11 +599,19 @@ const ModuleProgress: React.FC<ModuleProgressProps> = ({
       setTotalModule(data?.totalModules || 0);
       setCompletedModule(data?.completedModules || 0);
       console.log("Module progress fetched successfully!!");
-    } catch (error: any) {
-      console.error("Error:", error.message);
+    } catch (error: unknown) {
+      let message = "Something went wrong!!";
+
+      if (error instanceof Error && error.message) {
+        console.error("Error:", error.message);
+        message = error.message;
+      } else {
+        console.error("Error:", error);
+      }
+
       setToastMessage({
         type: "ERROR",
-        message: error.message || "Something went wrong!!",
+        message,
       });
     }
   };

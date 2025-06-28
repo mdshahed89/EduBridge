@@ -82,9 +82,14 @@ const Page = () => {
       setModules(data?.moduleWithLectures || []);
       setEnrolledCourses(data?.enrolledCourses || []);
       setError("");
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
-    } finally {
+    } catch (err: unknown) {
+  if (err instanceof Error) {
+    setError(err.message);
+  } else {
+    setError("Something went wrong");
+  }
+}
+ finally {
       setLoading(false);
     }
   };
@@ -161,14 +166,24 @@ const Page = () => {
         toast.success("Something went wrong!!");
         return;
       }
-    } catch (error: any) {
-      console.error("Error:", error.message);
-      setToastMessage({
-        type: "ERROR",
-        message: error.message || "Failed to create course",
-      });
-      toast.success(error.message || "Failed to create course");
-    }
+    } catch (error: unknown) {
+  let message = "Failed to create course";
+
+  if (error instanceof Error && error.message) {
+    console.error("Error:", error.message);
+    message = error.message;
+  } else {
+    console.error("Error:", error);
+  }
+
+  setToastMessage({
+    type: "ERROR",
+    message,
+  });
+
+  toast.error(message);
+}
+
   };
 
   // console.log(enrolledCourses);
@@ -256,7 +271,7 @@ const Page = () => {
 
           {modules.length > 0 ? (
             <div className="  ">
-              {modules.map((module, idx) => {
+              {modules.map((module) => {
                 const isOpen = openModuleId === module._id;
 
                 return (
@@ -338,7 +353,7 @@ const Page = () => {
             </div>
           ) : (
             <div className=" mt-[2rem] text-[1.2rem] font-medium text-[#5e5e5e] ">
-              There are no module's yet
+              There are no module&apos;s yet
             </div>
           )}
         </div>
