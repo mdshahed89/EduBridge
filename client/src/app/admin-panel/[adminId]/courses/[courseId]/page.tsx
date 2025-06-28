@@ -246,53 +246,59 @@ const Page = () => {
           </div>
         </div>
 
-        <div className="  ">
-          {filteredModules.map((module, idx) => (
-            <div
-              key={idx}
-              className={` flex items-center justify-between py-3  ${
-                modules.length !== idx + 1 && "border-b"
-              } `}
-            >
-              <Link
-                href={`/admin-panel/${adminId}/courses/${courseId}/module/${module._id}`}
-                className=" group transition-all duration-300 ease-in-out "
+        {filteredModules.length === 0 ? (
+          <div className=" text-[1.1rem] font-medium h-[7rem] flex items-center text-[#969595] ">
+            No modules available for this course.
+          </div>
+        ) : (
+          <div className="  ">
+            {filteredModules.map((module, idx) => (
+              <div
+                key={idx}
+                className={` flex items-center justify-between py-3  ${
+                  modules.length !== idx + 1 && "border-b"
+                } `}
               >
-                <div className="  ">
-                  <div className=" text-[#757575] ">
-                    Module {module.moduleNumber}
-                  </div>
-                  <div className=" line-clamp-1 text-[1.1rem] md:text-[1.3rem] font-medium group-hover:text-[#0400ff] group-hover:underline  ">
-                    {module.title}
-                  </div>
-                </div>
-              </Link>
-
-              <div className=" flex items-center gap-2 text-[1.7rem] ">
-                <div
-                  onClick={() => {
-                    setSelectedModule(module);
-                    setTitleForUpdate(module.title);
-                    setShowEditModal(true);
-                  }}
-                  className=" cursor-pointer text-[#0400ff] p-2 rounded-full hover:bg-[#0400ff]/5 "
+                <Link
+                  href={`/admin-panel/${adminId}/courses/${courseId}/module/${module._id}`}
+                  className=" group transition-all duration-300 ease-in-out "
                 >
-                  <CiEdit />
-                </div>
-                <div
-                  onClick={() => {
-                    setSelectedModule(module);
+                  <div className="  ">
+                    <div className=" text-[#757575] ">
+                      Module {module.moduleNumber}
+                    </div>
+                    <div className=" line-clamp-1 text-[1.1rem] md:text-[1.3rem] font-medium group-hover:text-[#0400ff] group-hover:underline  ">
+                      {module.title}
+                    </div>
+                  </div>
+                </Link>
 
-                    setShowDeleteModal(true);
-                  }}
-                  className=" cursor-pointer text-red-500 p-2 rounded-full hover:bg-red-50 "
-                >
-                  <MdDeleteOutline />
+                <div className=" flex items-center gap-2 text-[1.7rem] ">
+                  <div
+                    onClick={() => {
+                      setSelectedModule(module);
+                      setTitleForUpdate(module.title);
+                      setShowEditModal(true);
+                    }}
+                    className=" cursor-pointer text-[#0400ff] p-2 rounded-full hover:bg-[#0400ff]/5 "
+                  >
+                    <CiEdit />
+                  </div>
+                  <div
+                    onClick={() => {
+                      setSelectedModule(module);
+
+                      setShowDeleteModal(true);
+                    }}
+                    className=" cursor-pointer text-red-500 p-2 rounded-full hover:bg-red-50 "
+                  >
+                    <MdDeleteOutline />
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {showEditModal && (

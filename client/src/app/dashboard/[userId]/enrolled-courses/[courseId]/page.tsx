@@ -295,7 +295,7 @@ const Page = () => {
             {isYouTube(selectedLecture.videoUrl) ? (
               <iframe
                 src={getYouTubeEmbedUrl(selectedLecture.videoUrl)}
-                className="w-full h-[20rem] rounded"
+                className="w-full h-[20rem] md:h-[30rem] xl:h-[35rem] 2xl:h-[40rem] rounded-md overflow-hidden"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               ></iframe>
@@ -590,6 +590,9 @@ const ModuleProgress: React.FC<ModuleProgressProps> = ({
       );
 
       const data = await res.json();
+
+      // console.log("dt",userData.token);
+      
 
       if (!res.ok) {
         toast.error(data.message || "Something went wrong");

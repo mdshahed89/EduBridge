@@ -140,7 +140,8 @@ const Page = () => {
         return;
       }
 
-      console.log("Lecture created successfully:", data);
+      console.log("Lecture added successfully:", data);
+      toast.success("Lecture Added Successfully!!")
       fetchLectures();
       setShowModal(false);
       setFormData({
@@ -264,7 +265,10 @@ const Page = () => {
           </div>
         </div>
 
-        <div className=" mt-[1rem] ">
+        {
+          filteredLectures.length === 0 ? <div className=" text-[1.1rem] font-medium h-[7rem] flex items-center text-[#969595] ">
+            No lectures available for this module.
+          </div> : <div className=" mt-[1rem] ">
           {filteredLectures.map((lecture, idx) => (
             <div
               key={idx}
@@ -324,6 +328,7 @@ const Page = () => {
             </div>
           ))}
         </div>
+        }
       </div>
 
       {showEditModal && selectedLecture && (
@@ -947,12 +952,12 @@ const VideoUpload: React.FC<Props> = ({ formData, setFormData }) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    const maxSize = 20 * 1024 * 1024; // 20MB max
+    const maxSize = 50 * 1024 * 1024; // 20MB max
 
     if (file.size > maxSize) {
       setToastMessage({
         type: "Error",
-        message: "Video must be under 20MB.",
+        message: "Video must be under 50MB.",
       });
       return;
     }

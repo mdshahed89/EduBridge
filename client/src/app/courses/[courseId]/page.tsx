@@ -231,14 +231,18 @@ const Page = () => {
             </div>
           </Link>
         </div>
-      ) : (
-        <div
+      ) : 
+        userData._id ? <div
           onClick={handleEnrollCourse}
           className="cursor-pointer bg-[#0400ff] px-7 py-2 w-fit text-white font-medium rounded-md mt-[2rem] active:scale-95 transition-all duration-300 ease-in-out"
         >
           Enroll for Free Now
-        </div>
-      )}
+        </div> : <Link href={`/login`}
+          className="cursor-pointer block bg-[#0400ff] px-7 py-2 w-fit text-white font-medium rounded-md mt-[2rem] active:scale-95 transition-all duration-300 ease-in-out"
+        >
+          Enroll for Free Now
+        </Link>
+      }
       {
         toastMessage.type === "Error" && <p className=" text-sm text-red-500 mt-2 ">{toastMessage.message}</p>
       }

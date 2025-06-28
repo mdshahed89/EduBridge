@@ -685,12 +685,18 @@ export const completeLecture = async (req, res) => {
 export const getCourseProgress = async (req, res) => {
   try {
     const userId = req.user.id;
+    // console.log(userId);
+
     const { courseId } = req.params;
 
     const user = await User.findById(userId).populate("enrolledCourses.course");
 
+    // const courseProgress = user.enrolledCourses.find(
+    //   (c) => c.course._id.toString() === courseId
+    // );
+
     const courseProgress = user.enrolledCourses.find(
-      (c) => c.course._id.toString() === courseId
+      (c) => c.course && c.course._id.toString() === courseId
     );
 
     if (!courseProgress) {

@@ -155,38 +155,36 @@ const Page = () => {
 
   // console.log(formData);
 
-  if (userData._id) {
-    return (
-      <div className="bg-[#000]/90 h-[100vh] flex flex-col">
-        {/* Header */}
-        <div className="max-w-[1400px] mx-auto px-3 w-full">
-          <div className="h-[5rem] flex items-center justify-between">
-            <Link href={`/`} className="text-[2rem] text-white">
-              EduBridge
-            </Link>
-            <Link
-              href={`/`}
-              className="flex items-center gap-2 border-2 border-[#0400ff] text-white transition-colors duration-300 ease-in-out rounded-lg px-8 py-2 text-[1.1rem]"
-            >
-              <RiHome9Line className="text-[1.3rem]" />
-              <span>Home</span>
-            </Link>
-          </div>
-        </div>
+  // if (userData._id) {
+  //   return (
+  //     <div className="bg-[#000]/90 h-[100vh] flex flex-col">
+  //       <div className="max-w-[1400px] mx-auto px-3 w-full">
+  //         <div className="h-[5rem] flex items-center justify-between">
+  //           <Link href={`/`} className="text-[2rem] text-white">
+  //             EduBridge
+  //           </Link>
+  //           <Link
+  //             href={`/`}
+  //             className="flex items-center gap-2 border-2 border-[#0400ff] text-white transition-colors duration-300 ease-in-out rounded-lg px-8 py-2 text-[1.1rem]"
+  //           >
+  //             <RiHome9Line className="text-[1.3rem]" />
+  //             <span>Home</span>
+  //           </Link>
+  //         </div>
+  //       </div>
 
-        {/* Centered Message */}
-        <div className="flex-1 flex flex-col items-center justify-center text-white text-[1.2rem] font-medium text-center">
-          <h3 className="mb-3">You are already logged in</h3>
-          <Link
-            href={`/dashboard/${userData._id}`}
-            className="underline text-blue-400 hover:text-blue-500 transition"
-          >
-            Go to Dashboard
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  //       <div className="flex-1 flex flex-col items-center justify-center text-white text-[1.2rem] font-medium text-center">
+  //         <h3 className="mb-3">You are already logged in</h3>
+  //         <Link
+  //           href={`/dashboard/${userData._id}`}
+  //           className="underline text-blue-400 hover:text-blue-500 transition"
+  //         >
+  //           Go to Dashboard
+  //         </Link>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className=" bg-[#000000] min-h-screen h-full text-[#fff] login-bg ">

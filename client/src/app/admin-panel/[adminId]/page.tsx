@@ -43,7 +43,7 @@ const Summary = () => {
           <div className="p-3 bg-[#0400ff]/10 text-[#0400ff] text-[2rem] rounded-lg">
             {item.icon}
           </div>
-          <div className=" text-[1.2rem] lg:text-[1.4rem] font-medium">
+          <div className=" text-lg font-medium">
             <div className="text-[#5e5e5e]">{item.title}</div>
             <div>{item.count}</div>
           </div>

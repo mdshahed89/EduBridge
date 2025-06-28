@@ -71,8 +71,9 @@ const Courses = () => {
         </h2>
         <p className="max-w-[35rem] mx-auto text-[#2c2c2c]">
           Browse a wide range of expert-led courses designed to help you
-          upskill, switch careers, or deepen your knowledge. Whether you&apos;re just
-          starting out or looking to grow, there&apos;s something here for everyone.
+          upskill, switch careers, or deepen your knowledge. Whether you&apos;re
+          just starting out or looking to grow, there&apos;s something here for
+          everyone.
         </p>
       </div>
 
@@ -88,48 +89,55 @@ const Courses = () => {
         </div>
       ) : (
         <div>
-          <div className="mt-[2rem] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-            {courses.slice(0, 4).map((course, idx) => (
-              <div
-                key={idx}
-                className="w-full rounded-lg overflow-hidden border bg-white flex flex-col relative"
-              >
-                <div className="w-full h-[15rem] relative">
-                  <Image
-                    src={course.thumbnail}
-                    alt="course thumbnail"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-
-                <div className="flex flex-col justify-between h-full px-2 py-2 bg-gray-50 flex-1">
-                  <div className="flex-1">
-                    <div className=" text-[1.2rem] md:text-[1.4rem] font-medium line-clamp-1">
-                      {course.title}
-                    </div>
-                    <div className="text-[#414040] line-clamp-2">
-                      {course.description}
-                    </div>
-                    <div className="flex items-center gap-2 mt-3">
-                      <span className="text-[#0400ff]">${course.price}</span>
-                      <span className="line-through text-gray-500">
-                        ${Number(course.price + course.price * 0.3).toFixed(0)}
-                      </span>
-                    </div>
+          {courses.length === 0 ? (
+            <div className=" h-[10rem] text-center flex items-center justify-center text-[1.2rem] font-medium ">
+              There are no courses available.
+            </div>
+          ) : (
+            <div className="mt-[2rem] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+              {courses.slice(0, 4).map((course, idx) => (
+                <div
+                  key={idx}
+                  className="w-full rounded-lg overflow-hidden border bg-white flex flex-col relative"
+                >
+                  <div className="w-full h-[15rem] relative">
+                    <Image
+                      src={course.thumbnail}
+                      alt="course thumbnail"
+                      fill
+                      className="object-cover"
+                    />
                   </div>
 
-                  {/* Button */}
-                  <Link
-                    href={`/courses/${course._id}`}
-                    className="mt-4 bg-[#0400ff] py-2 w-full block text-center rounded-md text-white active:scale-95 transition-all duration-300 ease-in-out"
-                  >
-                    View Details
-                  </Link>
+                  <div className="flex flex-col justify-between h-full px-2 py-2 bg-gray-50 flex-1">
+                    <div className="flex-1">
+                      <div className=" text-[1.2rem] md:text-[1.4rem] font-medium line-clamp-1">
+                        {course.title}
+                      </div>
+                      <div className="text-[#414040] line-clamp-2">
+                        {course.description}
+                      </div>
+                      <div className="flex items-center gap-2 mt-3">
+                        <span className="text-[#0400ff]">${course.price}</span>
+                        <span className="line-through text-gray-500">
+                          $
+                          {Number(course.price + course.price * 0.3).toFixed(0)}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Button */}
+                    <Link
+                      href={`/courses/${course._id}`}
+                      className="mt-4 bg-[#0400ff] py-2 w-full block text-center rounded-md text-white active:scale-95 transition-all duration-300 ease-in-out"
+                    >
+                      View Details
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>
