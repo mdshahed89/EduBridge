@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useData } from "@/context/Context";
-import { GiCheckMark } from "react-icons/gi";
+import { ButtonLoading } from "@/utils/Loading";
 
 export default function Page() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [toastMessage, setToastMessage] = useState({
     type: "",
     message: "",
@@ -69,6 +69,8 @@ export default function Page() {
         message: "",
       });
 
+      setLoading(true);
+
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/auth/login`,
         {
@@ -90,16 +92,13 @@ export default function Page() {
         return;
       }
 
-      console.log(data);
-
-      setIsSuccess(true);
-      setTimeout(() => {
-        setUserData({
-          ...data?.user,
-          token: data?.token,
-        });
-        router.push(`/admin-panel/${data?.user?._id}`);
-      }, 2000);
+      // console.log(data);
+      setLoading(false);
+      setUserData({
+        ...data?.user,
+        token: data?.token,
+      });
+      router.push(`/admin-panel/${data?.user?._id}`);
     } catch (err: unknown) {
       let message = "Something went wrong";
 
@@ -112,6 +111,7 @@ export default function Page() {
         message,
       });
     } finally {
+      setLoading(false);
     }
   };
 
@@ -146,16 +146,7 @@ export default function Page() {
           </div>
           <div className="pt-5">
             <button className="w-full relative shadow-inner h-[3rem] bg-[#0400ff] text-[#fff] hover:bg-[#001aff] transition-colors duration-300 ease-in-out rounded-lg font-medium ">
-              {isSuccess ? (
-                <div>
-                  <div className=" flex items-center justify-center gap-2 text-green-500 ">
-                    <GiCheckMark />
-                    <span>Success</span>
-                  </div>
-                </div>
-              ) : (
-                "Login"
-              )}
+              {loading ? <ButtonLoading /> : "Login"}
             </button>
           </div>
           {toastMessage.type && toastMessage.message && (

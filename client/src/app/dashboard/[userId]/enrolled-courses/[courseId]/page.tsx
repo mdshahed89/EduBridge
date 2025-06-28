@@ -422,7 +422,7 @@ const Page = () => {
                         <div
                           className={` ${
                             Number(moduleIdx) === idx && "text-[#0400ff]"
-                          } line-clamp-1 text-[1.1rem] md:text-[1.3rem] font-medium `}
+                          } line-clamp-1 text-[1.1rem] md:text-[1.2rem] font-medium `}
                         >
                           {module.title}
                         </div>
@@ -463,7 +463,7 @@ const Page = () => {
                                 </div>
                                 <div>
                                   <div
-                                    className={` ${
+                                    className={` line-clamp-1 ${
                                       Number(moduleIdx) === idx &&
                                       Number(lectureIdx) === lcx &&
                                       "text-[#0400ff]"

@@ -4,7 +4,6 @@ import { useData } from "@/context/Context";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
-import { GiCheckMark } from "react-icons/gi";
 import { RiHome9Line } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
 import { ButtonLoading } from "@/utils/Loading";
@@ -14,8 +13,7 @@ const Page = () => {
   // const { userData } = useData();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [toastMessage, setToastMessage] = useState({
     type: "",
@@ -77,6 +75,7 @@ const Page = () => {
         message: "",
       });
       // setIsLoading(true);
+      setIsLoading(true);
 
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/auth/login`,
@@ -100,20 +99,19 @@ const Page = () => {
       }
 
       if (data?.user?._id) {
-        setIsSuccess(true);
+        setIsLoading(false);
         toast.success("User Login Successfully!!");
-        setTimeout(() => {
-          setUserData({
-            ...data?.user,
-            token: data?.token,
-          });
-          router.push(`/dashboard/${data?.user?._id}`);
-        }, 1000);
+        setUserData({
+          ...data?.user,
+          token: data?.token,
+        });
+        router.push(`/dashboard/${data?.user?._id}`);
       } else {
         setToastMessage({
           type: "ERROR",
           message: "Something went wrong!!",
         });
+        setIsLoading(false);
       }
     } catch (err: unknown) {
       let message = "Something went wrong";
@@ -127,7 +125,7 @@ const Page = () => {
         message,
       });
     } finally {
-      // setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -184,7 +182,7 @@ const Page = () => {
             className=" max-w-[40rem] border-2 border-[#252525] mx-auto p-[2rem] rounded-lg "
           >
             <div className=" text-center space-y-2 ">
-              <h3 className=" text-[2rem] ">Login</h3>
+              <h3 className=" text-[2rem] ">Sign In</h3>
               <p className=" text-[#cfcfcf] max-w-[22rem] ">
                 Lorem ipsum, dolor sit amet consectetur adipisicing elit.
                 Inventore, rem.
@@ -246,18 +244,8 @@ const Page = () => {
               </div>
 
               <div className=" pt-[1rem]  text-[1.1rem] ">
-                <button className=" w-full bg-[#0400ff] text-[#fff] hover:bg-[#2f00ff] rounded-md py-2 font-medium transition-all duration-300 ease-in-out ">
-                  {isSuccess ? (
-                    <div className=" flex items-center justify-center gap-2 text-green-500 ">
-                      <GiCheckMark className="  " />
-                      <span>Success</span>
-                    </div>
-                  ) : (
-                    // : loading ? (
-                    //   "Processing..."
-                    // )
-                    "Logg In"
-                  )}
+                <button className=" relative h-[2.7rem] w-full bg-[#0400ff] text-[#fff] hover:bg-[#2f00ff] rounded-md font-medium transition-all duration-300 ease-in-out ">
+                  {isLoading ? <ButtonLoading /> : "Sign In"}
                 </button>
               </div>
 

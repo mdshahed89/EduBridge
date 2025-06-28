@@ -26,12 +26,12 @@ const Header = () => {
   return (
     <header className=" fixed top-0 left-0 w-full h-[70px] flex items-center bg-[#fff] z-50 ">
       <div className=" px-3 max-w-[1400px] mx-auto w-full flex items-center justify-between gap-2 ">
-        <div className=" flex items-center gap-1 font-poppins ">
+        <Link href={`/`} className=" flex items-center gap-1 font-poppins ">
           <div className=" text-[#0400ff] text-[1.8rem]  ">
             <PiStudentBold />
           </div>
           <span className=" text-[1.5rem] font-medium ">EduBridge</span>
-        </div>
+        </Link>
         <div className=" flex items-center gap-3 lg:gap-5 ">
           <div className=" hidden md:flex items-center gap-3  ">
             <Link

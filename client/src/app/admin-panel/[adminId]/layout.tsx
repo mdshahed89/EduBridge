@@ -13,16 +13,15 @@ export default function DashboardLayout({
   children: React.ReactNode;
   params: Promise<{ adminId: string }>;
 }) {
-
-  const {userData} = useData()
-  const router = useRouter()
+  const { userData } = useData();
+  const router = useRouter();
   const [adminId, setAdminId] = useState<string | null>(null);
   const [isOpenSidebar, setIsOpenSidebar] = useState(() => {
-  if (typeof window !== 'undefined' && window.innerWidth <= 1024) {
-    return true;
-  }
-  return false; 
-});
+    if (typeof window !== "undefined" && window.innerWidth <= 1024) {
+      return true;
+    }
+    return false;
+  });
 
   useEffect(() => {
     params.then((res) => {
@@ -30,17 +29,23 @@ export default function DashboardLayout({
     });
   }, [params]);
 
+  useEffect(() => {
+    if (!userData || userData.role !== "Admin") {
+      router.push("/admin-login");
+    }
+  }, [userData, router]);
+
   if (!adminId) {
     return <PageLoading />;
   }
 
-  if(!userData || userData.role !== "Admin"){
-    router.push(`/admin-login`)
-  }
-
   return (
     <div className="min-h-[100vh] flex">
-      <Sidebar id={adminId} isOpenSidebar={isOpenSidebar} setIsOpenSidebar={setIsOpenSidebar} />
+      <Sidebar
+        id={adminId}
+        isOpenSidebar={isOpenSidebar}
+        setIsOpenSidebar={setIsOpenSidebar}
+      />
       <div className=" w-full  ">
         <TopBar
           isOpenSidebar={isOpenSidebar}

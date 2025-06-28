@@ -4,9 +4,9 @@ import { useData } from "@/context/Context";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { GiCheckMark } from "react-icons/gi";
 import { RiHome9Line } from "react-icons/ri";
 import toast from "react-hot-toast";
+import { ButtonLoading } from "@/utils/Loading";
 
 const Page = () => {
   // const { userData } = useData();
@@ -16,8 +16,7 @@ const Page = () => {
     password: "",
     confirmPassword: "",
   });
-  // const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [toastMessage, setToastMessage] = useState({
     type: "",
     message: "",
@@ -96,7 +95,7 @@ const Page = () => {
         type: "",
         message: "",
       });
-      // setIsLoading(true);
+      setIsLoading(true);
 
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/auth/register`,
@@ -121,20 +120,19 @@ const Page = () => {
 
       console.log(data);
       if (data?.user?._id) {
-        setIsSuccess(true);
+        setIsLoading(false)
         toast.success("User Registered Successfully!!");
-        setTimeout(() => {
           setUserData({
             ...data?.user,
             token: data?.token,
           });
           router.push(`/dashboard/${data?.user?._id}`);
-        }, 1000);
       } else {
         setToastMessage({
           type: "ERROR",
           message: "Something went wrong!!",
         });
+        setIsLoading(false)
         return;
       }
     } catch (err: unknown) {
@@ -149,7 +147,7 @@ const Page = () => {
         message,
       });
     } finally {
-      // setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -276,16 +274,8 @@ const Page = () => {
               </div>
 
               <div className=" pt-[1rem]  text-[1.1rem] ">
-                <button className=" w-full bg-[#0400ff] text-[#fff] hover:bg-[#2f00ff] rounded-md py-2 font-medium transition-all duration-300 ease-in-out ">
-                  {isSuccess ? (
-                    <div className=" flex items-center justify-center gap-2 text-green-500 ">
-                      <GiCheckMark className="  " />
-                      <span>Success</span>
-                    </div>
-                  ) : (
-                    // : loading ? (
-                    //   "Processing..."
-                    // )
+                <button className=" relative h-[2.7rem] w-full bg-[#0400ff] text-[#fff] hover:bg-[#2f00ff] rounded-md font-medium transition-all duration-300 ease-in-out ">
+                  {isLoading ? <ButtonLoading /> : (
                     "Sign Up"
                   )}
                 </button>

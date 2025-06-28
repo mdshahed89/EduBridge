@@ -1,7 +1,7 @@
 export const ButtonLoading = () => {
   return (
     <div className="absolute left-0 top-0 w-full h-full cursor-default inset-0 flex items-center justify-center bg-black/30 rounded-md">
-      <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+      <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
     </div>
   );
 };
