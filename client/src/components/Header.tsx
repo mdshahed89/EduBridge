@@ -3,192 +3,142 @@
 import { useData } from "@/context/Context";
 import { PageLoading } from "@/utils/Loading";
 import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
-import { FiSearch } from "react-icons/fi";
-import { MdJoinLeft, MdRoundaboutRight } from "react-icons/md";
-import { RiAccountBox2Line } from "react-icons/ri";
-import Logo from "@/assets/Logo.png";
-import Image from "next/image";
-import { LuUserRound } from "react-icons/lu";
-import { FaXmark } from "react-icons/fa6";
+import { usePathname } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { FiLogOut } from "react-icons/fi";
+import { HiMiniBars3BottomRight } from "react-icons/hi2";
+import { PiStudentBold } from "react-icons/pi";
+import { RxCross2 } from "react-icons/rx";
 
-interface Filters {
-  page: number;
-  limit: number;
-  nationality: string;
-  identity: string[];
-  minAge?: string;
-  maxAge?: string;
-  search: string;
-  sortBy: string;
-  eyeColors: string[];
-  hairColors: string[];
-  heights: string[];
-}
-
-interface HeaderProps {
-  filters: Filters;
-  setFilters: React.Dispatch<React.SetStateAction<Filters>>;
-}
-
-const Header: React.FC<HeaderProps> = ({ filters, setFilters }) => {
-  const [isClientReady, setIsClientReady] = useState(false);
-
+const Header = () => {
   const { userData } = useData();
-  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
-  const mobileSearchRef = useRef<HTMLDivElement | null>(null);
+  const pathname = usePathname();
+  const [isOpenSidebar, setIsOpenSidebar] = useState(false);
 
-  const toggleMobileSearch = () => setMobileSearchOpen((prev) => !prev);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClientReady(true);
+    setIsClient(true);
   }, []);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        mobileSearchRef.current &&
-        !mobileSearchRef.current.contains(event.target as Node)
-      ) {
-        setMobileSearchOpen(false);
-      }
-    };
-
-    if (mobileSearchOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [mobileSearchOpen]);
-
-  const [searchTerm, setSearchTerm] = useState(filters.search);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setFilters((prev) => ({
-        ...prev,
-        search: searchTerm,
-        page: 1, // reset page when searching
-      }));
-    }, 500); // debounce delay 500ms
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [searchTerm, setFilters]);
-
-  if (!isClientReady) {
-    return <PageLoading />;
-  }
-
-  // console.log(filters);
+  if (!isClient) return <PageLoading />;
 
   return (
-    <header className=" bg-gradient-to-r from-[#1B0206] to-[#2C040B] border-b text-[#F4F1ED] border-[#353535] fixed w-full left-0 top-0  z-50  ">
-      <div className=" relative flex items-center w-full max-w-[1400px] mx-auto px-3 ">
-        <div className=" border-r border-[#353535] pr-[1rem] md:pr-[2rem] mr-[1rem] lg:mr-[2rem] h-full py-6 ">
-          <Link href={`/`} className=" text-[2rem] flex items-center ">
-            <Image
-              src={Logo}
-              alt="Logo"
-              className=" w-[13rem] md:w-[13rem] object-contain "
-            />
-          </Link>
+    <header className=" fixed top-0 left-0 w-full h-[70px] flex items-center bg-[#fff] z-50 ">
+      <div className=" px-3 max-w-[1400px] mx-auto w-full flex items-center justify-between gap-2 ">
+        <div className=" flex items-center gap-1 font-poppins ">
+          <div className=" text-[#0400ff] text-[1.8rem]  ">
+            <PiStudentBold />
+          </div>
+          <span className=" text-[1.5rem] font-medium ">EduBridge</span>
         </div>
-        <div className="  w-full flex items-center justify-end md:justify-between ">
-          <div
-            ref={mobileSearchRef}
-            className={`absolute top-full left-0 flex items-center w-full bg-[#000] border border-[#800020] rounded-md mt-2 p-2 transition-transform origin-top ${
-              mobileSearchOpen ? "scale-y-100" : "scale-y-0 pointer-events-none"
-            }`}
-            style={{ transformOrigin: "top" }}
-          >
-            <FiSearch className=" text-gray-400 text-[1.4rem] " />
-            <input
-              type="text"
-              placeholder="Search by username or name"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full outline-none bg-transparent text-[1.2rem] text-[#F4F1ED] placeholder:text-gray-400 px-3 py-2"
-              autoFocus={mobileSearchOpen}
-            />
+        <div className=" flex items-center gap-3 lg:gap-5 ">
+          <div className=" hidden md:flex items-center gap-3  ">
+            <Link
+              href={`/`}
+              className={` ${
+                pathname === "/" && "text-[#0400ff]"
+              } px-2 py-2 hover:text-[#0400ff] transition-colors duration-300 ease-in-out `}
+            >
+              Home
+            </Link>
+            <Link
+              href={`#`}
+              className={` ${
+                pathname === "/about-us" && "text-[#0400ff]"
+              } px-2 py-2 hover:text-[#0400ff] transition-colors duration-300 ease-in-out `}
+            >
+              About Us
+            </Link>
+            <Link
+              href={`/courses`}
+              className={` ${
+                pathname === "/courses" && "text-[#0400ff]"
+              } px-2 py-2 hover:text-[#0400ff] transition-colors duration-300 ease-in-out `}
+            >
+              Courses
+            </Link>
+            <Link
+              href={`#`}
+              className={` ${
+                pathname === "/contact-us" && "text-[#0400ff]"
+              } px-2 py-2 hover:text-[#0400ff] transition-colors duration-300 ease-in-out `}
+            >
+              Contact Us
+            </Link>
           </div>
 
-          <div className=" md:flex hidden relative ">
-            <div className=" absolute h-full flex items-center text-[1.5rem] ">
-              <FiSearch className=" text-gray-400 " />
-            </div>
-            <input
-              type="text"
-              placeholder="Search by username or name"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className=" outline-none bg-transparent text-[1.2rem] pr-3 pl-[2rem] "
-            />
-          </div>
-          <div className=" flex items-center gap-2 ">
-            <div
-              onClick={toggleMobileSearch}
-              className=" flex lg:hidden items-center gap-2  border-2 border-[#D6BFA7] text-[#D6BFA7]  transition-colors duration-300 ease-in-out rounded-full px-2 py-2 text-[1.1rem]  "
-            >
-              {mobileSearchOpen ? (
-                <FaXmark className="text-[1.3rem]" />
-              ) : (
-                <FiSearch className="text-[1.3rem]" />
-              )}
-            </div>
-            <Link
-              href={`/faq`}
-              className=" flex lg:hidden items-center gap-2 border-2 border-[#D6BFA7] text-[#D6BFA7] transition-colors duration-300 ease-in-out rounded-full px-2 py-2 text-[1.1rem]  "
-            >
-              <MdRoundaboutRight className=" text-[1.3rem] " />
-            </Link>
-            {userData && userData?._id && userData?.email ? (
+          {userData._id ? (
+            <div className=" flex items-center gap-2 font-medium ">
               <Link
-                href={`/profile/${userData?._id}`}
-                className="flex items-center gap-2 text-[#D6BFA7] md:border-2 border-[#D6BFA7]  transition-colors duration-300 ease-in-out rounded-lg px-3 md:px-8 py-2 text-[1.1rem]  "
+                href={`/dashboard/${userData._id}`}
+                className=" line-clamp-1 border-2 border-[#0400ff] md:text-base text-sm px-5 md:px-7 py-2 hover:bg-[#0400ff] hover:text-[#fff] transition-colors duration-300 ease-in-out rounded-full text-[#0400ff] "
               >
-                <LuUserRound className=" text-[1.2rem] " />
-                <span>Profile</span>
+                Dashboard
               </Link>
-            ) : (
-              <>
-                <Link
-                  href={`/loggin`}
-                  className=" hidden lg:flex items-center gap-2 bg-transparent text-[#D6BFA7] md:border-2 border-[#D6BFA7]  transition-colors duration-300 ease-in-out rounded-lg px-3 md:px-8 py-2 text-[1.1rem]  "
-                >
-                  <RiAccountBox2Line className=" text-[1.3rem] " />
-                  <span>Logg Inn</span>
-                </Link>
-                <Link
-                  href={`/registrering`}
-                  className=" flex lg:hidden items-center gap-2  border-2 border-[#D6BFA7] text-[#D6BFA7] transition-colors duration-300 ease-in-out rounded-lg px-5 md:px-8 py-2 text-[1.1rem]  "
-                >
-                  <MdJoinLeft className=" text-[1.3rem] " />
-                  <span>Join</span>
-                </Link>
-              </>
-            )}
-            {/* shadow-[0px_1px_30px_#D6BFA7] */}
-            {(!userData || !userData?._id || !userData?.email) && (
+              <div className=" cursor-pointer md:flex hidden line-clamp-1 border-2 border-[#0400ff] bg-[#0400ff] md:text-base text-sm px-5 md:px-7 py-2 hover:bg-transparent hover:text-[#0400ff] transition-colors duration-300 ease-in-out rounded-full text-[#fff] ">
+                Sign Out
+              </div>
+              <div className=" md:hidden flex text-[1.1rem] line-clamp-1 border-2 border-[#0400ff] bg-[#0400ff] md:text-base  px-2 md:px-7 py-2 hover:bg-transparent hover:text-[#0400ff] transition-colors duration-300 ease-in-out rounded-full text-[#fff] ">
+                <FiLogOut />
+              </div>
+            </div>
+          ) : (
+            <div className=" flex items-center gap-2 font-medium ">
               <Link
-                href={`/registrering`}
-                className=" hidden lg:flex items-center gap-2 text-[#D6BFA7] border-2 border-[#D6BFA7] transition-colors duration-300 ease-in-out rounded-lg px-8 py-2 text-[1.1rem]  "
+                href={`/registation`}
+                className=" line-clamp-1 border-2 border-[#0400ff] md:text-base text-sm px-5 md:px-7 py-2 hover:bg-[#0400ff] hover:text-[#fff] transition-colors duration-300 ease-in-out rounded-full text-[#0400ff] "
               >
-                <MdJoinLeft className=" text-[1.3rem] " />
-                <span>Join</span>
+                Sign Up
               </Link>
-            )}
-            <Link
-              href={`/faq`}
-              className=" hidden lg:flex items-center gap-2 bg-transparent border-2 border-[#D6BFA7] text-[#D6BFA7]  transition-colors duration-300 ease-in-out rounded-lg px-8 py-2 text-[1.1rem]  "
-            >
-              <MdRoundaboutRight className=" text-[1.3rem] " />
-              <span className=" lg:block hidden ">FAQ</span>
-            </Link>
+              <Link
+                href={`/login`}
+                className=" line-clamp-1 border-2 border-[#0400ff] bg-[#0400ff] md:text-base text-sm px-5 md:px-7 py-2 hover:bg-transparent hover:text-[#0400ff] transition-colors duration-300 ease-in-out rounded-full text-[#fff] "
+              >
+                Sign In
+              </Link>
+            </div>
+          )}
+          <div
+            onClick={() => setIsOpenSidebar(true)}
+            className=" md:hidden flex text-[1.5rem] "
+          >
+            <HiMiniBars3BottomRight />
           </div>
+        </div>
+      </div>
+
+      <div
+        className={`fixed top-0 left-0 h-full w-full bg-white z-50 transform transition-transform duration-300 ease-in-out p-[1rem]
+    ${isOpenSidebar ? "translate-x-0" : "-translate-x-full"} md:hidden`}
+      >
+        <div className=" flex items-center justify-between mb-[2rem] ">
+          <div className=" flex items-center gap-1 font-poppins ">
+            <div className=" text-[#0400ff] text-[1.8rem]  ">
+              <PiStudentBold />
+            </div>
+            <span className=" text-[1.5rem] font-medium ">EduBridge</span>
+          </div>
+          <div
+            onClick={() => setIsOpenSidebar(false)}
+            className=" text-[1.6rem] "
+          >
+            <RxCross2 />
+          </div>
+        </div>
+        <div className="flex flex-col gap-4 text-xl ">
+          <Link href="/" className="py-2 border-b">
+            Home
+          </Link>
+          <Link href="#" className="py-2 border-b">
+            About Us
+          </Link>
+          <Link href="/courses" className="py-2 border-b">
+            Courses
+          </Link>
+          <Link href="#" className="py-2 border-b">
+            Contact Us
+          </Link>
         </div>
       </div>
     </header>

@@ -2,6 +2,7 @@ import User from "../../models/user.model.js";
 import Lecture from "../../models/lecture.model.js";
 import Course from "../../models/course.model.js";
 import Module from "../../models/module.model.js";
+import { getVideoDuration } from "../../utils/util.js";
 
 export const updateUser = async (req, res) => {
   const { userId } = req.params;
@@ -403,13 +404,38 @@ export const getAllCourses = async (req, res) => {
   }
 };
 
-// 2. Get course details by ID
+export const getEnrolledCourses = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const search = req.query.search || "";
+
+    const user = await User.findById(userId).populate("enrolledCourses.course");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const enrolledCourses = user.enrolledCourses
+      .map((item) => item.course)
+      .filter((course) =>
+        course?.title?.toLowerCase().includes(search.toLowerCase())
+      );
+
+    res.status(200).json(enrolledCourses);
+  } catch (err) {
+    console.error("Error fetching enrolled courses:", err);
+    res.status(500).json({ message: "Failed to get enrolled courses" });
+  }
+};
+
 export const getCourseDetails = async (req, res) => {
   try {
     const { courseId } = req.params;
     const course = await Course.findById(courseId);
     if (!course) return res.status(404).json({ message: "Course not found" });
-    const modules = await Module.find({ course: courseId }).sort({ moduleNumber: 1 });
+    const modules = await Module.find({ course: courseId }).sort({
+      moduleNumber: 1,
+    });
     res.status(200).json({
       success: true,
       course,
@@ -420,11 +446,30 @@ export const getCourseDetails = async (req, res) => {
   }
 };
 
-// 3. Get modules and lectures for a course
 export const getModulesWithLectures = async (req, res) => {
-  
   try {
+    const userId = req.user.id;
+    if (!userId) {
+      return res.status(400).send({
+        success: false,
+        message: "Something went wrong",
+      });
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).send({
+        success: false,
+        message: "User not found",
+      });
+    }
+
     const { courseId } = req.params;
+    const searchQuery = req.query.search?.toLowerCase() || "";
+
+    const course = await Course.findById(courseId);
+    if (!course) return res.status(404).json({ message: "Course not found" });
 
     const modules = await Module.find({ course: courseId }).sort({
       moduleNumber: 1,
@@ -432,30 +477,181 @@ export const getModulesWithLectures = async (req, res) => {
 
     const moduleWithLectures = await Promise.all(
       modules.map(async (mod) => {
+        const moduleTitleMatch = mod.title.toLowerCase().includes(searchQuery);
+
+        const moduleNumberMatch = !isNaN(Number(searchQuery))
+          ? mod.moduleNumber === Number(searchQuery)
+          : false;
+
         const lectures = await Lecture.find({ module: mod._id });
-        return {
-          ...mod._doc,
-          lectures,
-        };
+
+        const lectureTitleMatches = lectures.filter((lec) =>
+          lec.title.toLowerCase().includes(searchQuery)
+        );
+
+        if (
+          moduleTitleMatch ||
+          moduleNumberMatch ||
+          lectureTitleMatches.length > 0
+        ) {
+          const transformedLectures = await Promise.all(
+            lectureTitleMatches.map(async (lec) => ({
+              _id: lec._id,
+              title: lec.title,
+              // videoDuration: await getVideoDuration(lec.videoUrl),
+              pdfCount: lec.pdfNotes?.length || 0,
+            }))
+          );
+
+          return {
+            ...mod._doc,
+            lectures: transformedLectures,
+          };
+        }
+
+        return null;
       })
     );
 
-    res.status(200).json(moduleWithLectures);
+    const filteredModules = moduleWithLectures.filter(Boolean);
+
+    res.status(200).json({
+      success: true,
+      course,
+      moduleWithLectures: filteredModules,
+      enrolledCourses: user.enrolledCourses,
+    });
   } catch (err) {
+    console.error("Error:", err);
+    res.status(500).json({ message: "Failed to get modules and lectures" });
+  }
+};
+
+export const getModulesWithLecturesForEnrolledCourse = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: "Something went wrong",
+      });
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const { courseId } = req.params;
+    const searchQuery = req.query.search?.toLowerCase() || "";
+
+    const course = await Course.findById(courseId);
+
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    const isEnrolled = user.enrolledCourses.some(
+      (item) => item.course.toString() === courseId
+    );
+
+    if (!isEnrolled) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not enrolled in this course",
+      });
+    }
+
+    const modules = await Module.find({ course: courseId }).sort({
+      moduleNumber: 1,
+    });
+
+    const moduleWithLectures = await Promise.all(
+      modules.map(async (mod) => {
+        const moduleTitleMatch = mod.title.toLowerCase().includes(searchQuery);
+
+        const moduleNumberMatch = !isNaN(Number(searchQuery))
+          ? mod.moduleNumber === Number(searchQuery)
+          : false;
+
+        const lectures = await Lecture.find({ module: mod._id });
+
+        const lectureTitleMatches = lectures.filter((lec) =>
+          lec.title.toLowerCase().includes(searchQuery)
+        );
+
+        if (
+          moduleTitleMatch ||
+          moduleNumberMatch ||
+          lectureTitleMatches.length > 0 ||
+          !searchQuery
+        ) {
+          return {
+            ...mod._doc,
+            lectures: searchQuery ? lectureTitleMatches : lectures,
+          };
+        }
+
+        return null;
+      })
+    );
+
+    const filteredModules = moduleWithLectures.filter(Boolean);
+
+    res.status(200).json({
+      success: true,
+      course,
+      moduleWithLectures: filteredModules,
+      enrolledCourses: user.enrolledCourses,
+    });
+  } catch (err) {
+    console.error("Error:", err);
     res.status(500).json({ message: "Failed to get modules and lectures" });
   }
 };
 
 export const getLecturesByModuleId = async (req, res) => {
   try {
-    
     const { moduleId } = req.params;
     const lectures = await Lecture.find({ module: moduleId });
     res.status(200).json(lectures);
   } catch (err) {
-    res.status(500).json({ message: 'Failed to get lectures' });
+    res.status(500).json({ message: "Failed to get lectures" });
   }
-}
+};
+
+export const enrollInCourse = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { courseId } = req.body;
+
+    const user = await User.findById(userId);
+    const alreadyEnrolled = user.enrolledCourses.some((enrolled) =>
+      enrolled.course.equals(courseId)
+    );
+
+    if (alreadyEnrolled) {
+      return res
+        .status(400)
+        .json({ message: "Already enrolled in this course" });
+    }
+
+    user.enrolledCourses.push({ course: courseId });
+    await user.save();
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Enrolled successfully", courseId });
+  } catch (err) {
+    console.error("Enroll error:", err);
+    res.status(500).json({ message: "Failed to enroll in course" });
+  }
+};
 
 export const completeLecture = async (req, res) => {
   try {
@@ -486,7 +682,6 @@ export const completeLecture = async (req, res) => {
   }
 };
 
-// 5. Get progress for a course
 export const getCourseProgress = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -502,8 +697,40 @@ export const getCourseProgress = async (req, res) => {
       return res.status(404).json({ message: "Course not enrolled" });
     }
 
-    res.status(200).json(courseProgress.progress);
+    const modules = await Module.find({ course: courseId });
+    const moduleIds = modules.map((m) => m._id);
+
+    const lectures = await Lecture.find({ module: { $in: moduleIds } });
+
+    const lecturesByModule = {};
+    lectures.forEach((lecture) => {
+      const modId = lecture.module.toString();
+      if (!lecturesByModule[modId]) lecturesByModule[modId] = [];
+      lecturesByModule[modId].push(lecture._id.toString());
+    });
+
+    const completedLectureIds = new Set(
+      courseProgress.progress
+        .filter((entry) => entry.completed)
+        .map((entry) => entry.lecture.toString())
+    );
+
+    let completedModules = 0;
+    for (const moduleId in lecturesByModule) {
+      const allLectures = lecturesByModule[moduleId];
+      const isModuleCompleted = allLectures.every((lecId) =>
+        completedLectureIds.has(lecId)
+      );
+      if (isModuleCompleted) completedModules++;
+    }
+
+    res.status(200).json({
+      totalModules: modules.length,
+      completedModules,
+      progress: courseProgress.progress,
+    });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Failed to fetch course progress" });
   }
 };

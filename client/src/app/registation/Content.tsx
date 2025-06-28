@@ -3,13 +3,9 @@
 import { useData } from "@/context/Context";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { GiCheckMark } from "react-icons/gi";
 import { RiHome9Line } from "react-icons/ri";
-import Logo from "@/assets/Logo.png";
-import Image from "next/image";
-import { RxCross2 } from "react-icons/rx";
-import { ButtonLoading } from "@/utils/Loading";
 import toast from "react-hot-toast";
 
 const Page = () => {
@@ -22,7 +18,6 @@ const Page = () => {
   });
   // const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const [toastMessage, setToastMessage] = useState({
     type: "",
     message: "",
@@ -160,37 +155,36 @@ const Page = () => {
 
   // console.log(formData);
 
-  if (userData) {
+  if (userData._id) {
     return (
       <div className="bg-[#000]/90 h-[100vh] flex flex-col">
-  {/* Header */}
-  <div className="max-w-[1400px] mx-auto px-3 w-full">
-    <div className="h-[5rem] flex items-center justify-between">
-      <Link href={`/`} className="text-[2rem] text-white">
-        EduBridge
-      </Link>
-      <Link
-        href={`/`}
-        className="flex items-center gap-2 border-2 border-[#0400ff] text-white transition-colors duration-300 ease-in-out rounded-lg px-8 py-2 text-[1.1rem]"
-      >
-        <RiHome9Line className="text-[1.3rem]" />
-        <span>Home</span>
-      </Link>
-    </div>
-  </div>
+        {/* Header */}
+        <div className="max-w-[1400px] mx-auto px-3 w-full">
+          <div className="h-[5rem] flex items-center justify-between">
+            <Link href={`/`} className="text-[2rem] text-white">
+              EduBridge
+            </Link>
+            <Link
+              href={`/`}
+              className="flex items-center gap-2 border-2 border-[#0400ff] text-white transition-colors duration-300 ease-in-out rounded-lg px-8 py-2 text-[1.1rem]"
+            >
+              <RiHome9Line className="text-[1.3rem]" />
+              <span>Home</span>
+            </Link>
+          </div>
+        </div>
 
-  {/* Centered Message */}
-  <div className="flex-1 flex flex-col items-center justify-center text-white text-[1.2rem] font-medium text-center">
-    <h3 className="mb-3">You are already logged in</h3>
-    <Link
-      href={`/dashboard/${userData._id}`}
-      className="underline text-blue-400 hover:text-blue-500 transition"
-    >
-      Go to Dashboard
-    </Link>
-  </div>
-</div>
-
+        {/* Centered Message */}
+        <div className="flex-1 flex flex-col items-center justify-center text-white text-[1.2rem] font-medium text-center">
+          <h3 className="mb-3">You are already logged in</h3>
+          <Link
+            href={`/dashboard/${userData._id}`}
+            className="underline text-blue-400 hover:text-blue-500 transition"
+          >
+            Go to Dashboard
+          </Link>
+        </div>
+      </div>
     );
   }
 
@@ -213,7 +207,7 @@ const Page = () => {
         <div className=" h-[calc(100vh-5rem)] flex items-center ">
           <form
             onSubmit={handleSubmit}
-            className=" max-w-[40rem] bg-[#000000] border-2 border-[#252525] mx-auto p-[2rem] rounded-lg "
+            className=" max-w-[40rem] border-2 border-[#252525] mx-auto p-[2rem] rounded-lg "
           >
             <div className=" text-center space-y-2 ">
               <h3 className=" text-[2rem] ">Sign Up</h3>

@@ -1,50 +1,5 @@
 
-// utils/calculateRemainingPlanDays.js
 import nodemailer from "nodemailer"
-
-// export function calculateRemainingPlanDays(user) {
-//   if (!user?.isPlanActive || !user?.planStartDate || !user?.planDuration) {
-//     return 0;
-//   }
-
-//   const now = new Date();
-//   const start = new Date(user.planStartDate);
-//   const elapsedMs = now.getTime() - start.getTime();
-//   const elapsedDays = Math.floor(elapsedMs / (1000 * 60 * 60 * 24));
-
-//   const remainingDays = user.planDuration - elapsedDays;
-//   return remainingDays > 0 ? remainingDays : 0;
-// }
-
-export function calculateRemainingPlanDays(user) {
-  if (!user?.isPlanActive || !user?.planStartDate || !user?.planDuration) {
-    return 0;
-  }
-
-  const now = new Date();
-  const startDate = new Date(user.planStartDate);
-
-  let elapsedMs = now.getTime() - startDate.getTime();
-
-  // Subtract freeze durations
-  if (user.freezePeriods && user.freezePeriods.length > 0) {
-    user.freezePeriods.forEach(period => {
-      const freezeStart = new Date(period.start);
-      const freezeEnd = period.end ? new Date(period.end) : now; // ongoing freeze
-      const overlapStart = freezeStart > startDate ? freezeStart : startDate;
-      const overlapEnd = freezeEnd < now ? freezeEnd : now;
-
-      const freezeDuration = Math.max(0, overlapEnd.getTime() - overlapStart.getTime());
-      elapsedMs -= freezeDuration;
-    });
-  }
-
-  const elapsedDays = Math.floor(elapsedMs / (1000 * 60 * 60 * 24));
-  const remainingDays = user.planDuration - elapsedDays;
-
-  return remainingDays > 0 ? remainingDays : 0;
-}
-
 
 
 export const sendEmail = async ({ to, subject, html }) => {
@@ -57,9 +12,66 @@ export const sendEmail = async ({ to, subject, html }) => {
   });
 
   await transporter.sendMail({
-    from: `"ScandiFans" <${process.env.EMAIL_USER}>`,
+    from: `"EduBridge" <${process.env.EMAIL_USER}>`,
     to,
     subject,
     html,
+  });
+};
+
+
+// import { v2 as cloudinary } from 'cloudinary'
+
+// cloudinary.config({
+//   cloud_name: 'ddlwhkn3b',
+//   api_key: '814734539723169',
+//   api_secret: 'TvKlJO5Io-37u0B0PyiJ1WUTA1o',
+// });
+
+// export const getVideoDuration = async (videoUrl) => {
+//   try {
+//     const uploadIndex = videoUrl.indexOf('/upload/');
+//     if (uploadIndex === -1) return null;
+
+//     const pathAfterUpload = videoUrl.substring(uploadIndex + 8);
+
+//     const pathParts = pathAfterUpload.split('/');
+//     if (pathParts[0].startsWith('v')) {
+//       pathParts.shift(); 
+//     }
+
+//     const lastPart = pathParts[pathParts.length - 1];
+//     pathParts[pathParts.length - 1] = lastPart.replace(/\.[^/.]+$/, '');
+
+//     const publicId = pathParts.join('/');
+
+//     const result = await cloudinary.api.resource(publicId, {
+//       resource_type: 'video',
+//     });
+
+//     console.log(result);
+    
+
+//     return result.duration; 
+//   } catch (err) {
+//     console.error('Failed to fetch video metadata:', err.message);
+//     return null;
+//   }
+// };
+
+
+import ffmpeg from 'fluent-ffmpeg';
+
+export const getVideoDuration = (videoUrl) => {
+  return new Promise((resolve, reject) => {
+    ffmpeg.ffprobe(videoUrl, (err, metadata) => {
+      if (err) {
+        console.error('FFProbe error:', err);
+        return reject(null);
+      }
+
+      const duration = metadata.format?.duration
+      resolve(duration || 0);
+    });
   });
 };

@@ -30,6 +30,8 @@ interface FormProviderProps {
 }
 
 export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
+
+
   const [userData, setUserData] = useState<UserData>(() => {
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem("userData");
@@ -60,6 +62,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
     if (typeof window !== "undefined") {
       setUserData({});
       localStorage.removeItem("userData");
+      // toast.success("Logout Successfully!!")
+      // router.push("/login")
     }
   };
 

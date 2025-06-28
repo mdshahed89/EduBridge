@@ -20,80 +20,35 @@ const page = () => {
 export default page;
 
 const Summary = () => {
+
+  const summaryItems = [
+  { title: "Enrolled Courses", count: 30, icon: <FaBookOpen /> },
+  { title: "Active Courses", count: 30, icon: <MdPlayCircleFilled /> },
+  { title: "Completed Courses", count: 30, icon: <AiOutlineCheckCircle /> },
+  { title: "New Registrations", count: 30, icon: <MdPersonAddAlt1 /> },
+  { title: "Total Students", count: 30, icon: <PiStudentFill /> },
+  { title: "Total Courses", count: 30, icon: <GiBookshelf /> },
+  { title: "Total Earning", count: 30, icon: <RiMoneyDollarCircleFill /> },
+  { title: "Total Instructors", count: 30, icon: <HiUsers /> },
+];
+
+
   return (
-    <div className=" grid grid-cols-4 gap-2 ">
-      <div className=" flex items-center gap-6 px-[1rem] py-[1.5rem] rounded-lg bg-[#0400ff]/5 ">
-        <div className=" p-3 bg-[#0400ff]/10 text-[#0400ff] text-[2rem] rounded-lg ">
-          <FaBookOpen />
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-2">
+      {summaryItems.map((item, idx) => (
+        <div
+          key={idx}
+          className="flex items-center gap-6 px-[1rem] py-[1.5rem] rounded-lg bg-[#0400ff]/5"
+        >
+          <div className="p-3 bg-[#0400ff]/10 text-[#0400ff] text-[2rem] rounded-lg">
+            {item.icon}
+          </div>
+          <div className=" text-[1.2rem] lg:text-[1.4rem] font-medium">
+            <div className="text-[#5e5e5e]">{item.title}</div>
+            <div>{item.count}</div>
+          </div>
         </div>
-        <div className=" text-[1.4rem] font-medium ">
-          <div className=" text-[#5e5e5e] ">Enrolled Courses</div>
-          <div>30</div>
-        </div>
-      </div>
-      <div className=" flex items-center gap-6 px-[1rem] py-[1.5rem] rounded-lg bg-[#0400ff]/5 ">
-        <div className=" p-3 bg-[#0400ff]/10 text-[#0400ff] text-[2rem] rounded-lg ">
-          <MdPlayCircleFilled />
-        </div>
-        <div className=" text-[1.4rem] font-medium ">
-          <div className=" text-[#5e5e5e] ">Active Courses</div>
-          <div>30</div>
-        </div>
-      </div>
-      <div className=" flex items-center gap-6 px-[1rem] py-[1.5rem] rounded-lg bg-[#0400ff]/5 ">
-        <div className=" p-3 bg-[#0400ff]/10 text-[#0400ff] text-[2rem] rounded-lg ">
-          <AiOutlineCheckCircle />
-        </div>
-        <div className=" text-[1.4rem] font-medium ">
-          <div className=" text-[#5e5e5e] ">Completed Courses</div>
-          <div>30</div>
-        </div>
-      </div>
-      <div className=" flex items-center gap-6 px-[1rem] py-[1.5rem] rounded-lg bg-[#0400ff]/5 ">
-        <div className=" p-3 bg-[#0400ff]/10 text-[#0400ff] text-[2rem] rounded-lg ">
-          <MdPersonAddAlt1 />
-        </div>
-        <div className=" text-[1.4rem] font-medium ">
-          <div className=" text-[#5e5e5e] ">New Registrations</div>
-          <div>30</div>
-        </div>
-      </div>
-      <div className=" flex items-center gap-6 px-[1rem] py-[1.5rem] rounded-lg bg-[#0400ff]/5 ">
-        <div className=" p-3 bg-[#0400ff]/10 text-[#0400ff] text-[2rem] rounded-lg ">
-          <PiStudentFill />
-        </div>
-        <div className=" text-[1.4rem] font-medium ">
-          <div className=" text-[#5e5e5e] ">Total Students</div>
-          <div>30</div>
-        </div>
-      </div>
-      <div className=" flex items-center gap-6 px-[1rem] py-[1.5rem] rounded-lg bg-[#0400ff]/5 ">
-        <div className=" p-3 bg-[#0400ff]/10 text-[#0400ff] text-[2rem] rounded-lg ">
-          <GiBookshelf />
-        </div>
-        <div className=" text-[1.4rem] font-medium ">
-          <div className=" text-[#5e5e5e] ">Total Courses</div>
-          <div>30</div>
-        </div>
-      </div>
-      <div className=" flex items-center gap-6 px-[1rem] py-[1.5rem] rounded-lg bg-[#0400ff]/5 ">
-        <div className=" p-3 bg-[#0400ff]/10 text-[#0400ff] text-[2rem] rounded-lg ">
-          <RiMoneyDollarCircleFill />
-        </div>
-        <div className=" text-[1.4rem] font-medium ">
-          <div className=" text-[#5e5e5e] ">Total Earning</div>
-          <div>30</div>
-        </div>
-      </div>
-      <div className=" flex items-center gap-6 px-[1rem] py-[1.5rem] rounded-lg bg-[#0400ff]/5 ">
-        <div className=" p-3 bg-[#0400ff]/10 text-[#0400ff] text-[2rem] rounded-lg ">
-          <HiUsers />
-        </div>
-        <div className=" text-[1.4rem] font-medium ">
-          <div className=" text-[#5e5e5e] ">Total Instructors</div>
-          <div>30</div>
-        </div>
-      </div>
+      ))}
     </div>
   );
 };

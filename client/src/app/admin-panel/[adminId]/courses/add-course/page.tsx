@@ -254,7 +254,7 @@ const ImageUpload: React.FC<DataProps> = ({ formData, setFormData }) => {
 
   return (
     <div className=" flex gap-10 lg:flex-row flex-col ">
-      <div className=" max-w-[30rem] h-[20rem] lg:mx-0 mx-auto w-full ">
+      <div className=" max-w-[30rem] h-[20rem] w-full ">
         <div className=" relative border-2 border-[#0400ff] h-full rounded-lg overflow-hidden ">
           {loading && <FetchLoading />}
           {!loading && formData.thumbnail ? (

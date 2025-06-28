@@ -156,6 +156,14 @@ const Page = () => {
     }
   };
 
+  if(loading){
+    return(
+      <div className=" min-h-[20rem] relative ">
+        <FetchLoading />
+      </div>
+    )
+  }
+
   return (
     <div>
       <Link
@@ -166,6 +174,10 @@ const Page = () => {
         <span>Back</span>
       </Link>
       <h3 className=" text-[1.2rem] ">Update Course</h3>
+
+      {
+        error && <p className=" text-sm text-red-500 mt-2 ">{error}</p>
+      }
 
       <div className=" mt-10 ">
         <ImageUpload formData={formData} setFormData={setFormData} />
@@ -297,7 +309,7 @@ const ImageUpload: React.FC<DataProps> = ({ formData, setFormData }) => {
 
   return (
     <div className=" flex gap-10 lg:flex-row flex-col ">
-      <div className=" max-w-[30rem] h-[20rem] lg:mx-0 mx-auto w-full ">
+      <div className=" max-w-[30rem] h-[20rem] w-full ">
         <div className=" relative border-2 border-[#0400ff] h-full rounded-lg overflow-hidden ">
           {loading && <FetchLoading />}
           {!loading && formData.thumbnail ? (

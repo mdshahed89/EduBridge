@@ -185,16 +185,16 @@ const Page = () => {
         <span>Back</span>
       </Link>
       <div>
-        <div className=" text-[2.5rem] font-medium leading-tight ">
+        <div className=" text-[1.5rem] md:text-[2rem] lg:text-[2.5rem] font-medium leading-tight ">
           {course?.title}
         </div>
-        <span className=" text-lg text-[#0400ff] mt-[1rem] ">
+        <div className=" text-lg text-[#0400ff] mt-[1rem] ">
           ${course?.price}
-        </span>
+        </div>
       </div>
 
       <div className=" mt-[2rem] ">
-        <h3 className=" text-[1.5rem] font-medium ">
+        <h3 className=" text-[1.2rem] md:text-[1.5rem] font-medium ">
           There are {modules.length} modules in this course
         </h3>
         <p className=" text-lg text-[#2e2e2e] mt-[.5rem] ">
@@ -249,7 +249,7 @@ const Page = () => {
                   <div className=" text-[#757575] ">
                     Module {module.moduleNumber}
                   </div>
-                  <div className=" line-clamp-1 text-[1.3rem] font-medium group-hover:text-[#0400ff] group-hover:underline  ">
+                  <div className=" line-clamp-1 text-[1.1rem] md:text-[1.3rem] font-medium group-hover:text-[#0400ff] group-hover:underline  ">
                     {module.title}
                   </div>
                 </div>

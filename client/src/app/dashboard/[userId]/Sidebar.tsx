@@ -1,27 +1,17 @@
 "use client";
 
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useState } from "react";
 import Link from "next/link";
 import {
-  FaBalanceScale,
-  FaCalendarAlt,
-  FaChartPie,
-  FaExchangeAlt,
   FaHome,
-  FaMountain,
-  FaTags,
-  FaUniversity,
-  FaWallet,
 } from "react-icons/fa";
-import { FaBasketball } from "react-icons/fa6";
 import { usePathname, useRouter } from "next/navigation";
 import { IoIosArrowForward } from "react-icons/io";
 import { BsLayoutSidebar } from "react-icons/bs";
 import { PiStudentBold } from "react-icons/pi";
 import { MdHelpOutline, MdLogout } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
-import { LuBookOpen } from "react-icons/lu";
-import { HiUsers } from "react-icons/hi2";
+import { LuBookOpen, LuGraduationCap } from "react-icons/lu";
 import { FiSettings } from "react-icons/fi";
 import { useData } from "@/context/Context";
 import toast from "react-hot-toast";
@@ -33,9 +23,8 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ id, isOpenSidebar, setIsOpenSidebar }: SidebarProps) => {
-
-  const {logout} = useData()
-  const router = useRouter()
+  const { logout } = useData();
+  const router = useRouter();
   const currentPath = usePathname();
 
   const items1 = [
@@ -53,6 +42,11 @@ const Sidebar = ({ id, isOpenSidebar, setIsOpenSidebar }: SidebarProps) => {
       name: "Courses",
       icon: <LuBookOpen />,
       path: `/dashboard/${id}/courses`,
+    },
+    {
+      name: "Enrolled Courses",
+      icon: <LuGraduationCap />,
+      path: `/dashboard/${id}/enrolled-courses`,
     },
   ];
 
@@ -89,16 +83,16 @@ const Sidebar = ({ id, isOpenSidebar, setIsOpenSidebar }: SidebarProps) => {
     transform transition-transform duration-300 ease-in-out ${
       !isOpenSidebar ? "translate-x-0" : "-translate-x-full"
     }`}
-          onClick={(e) => e.stopPropagation()} // Prevent click close
+          onClick={(e) => e.stopPropagation()} 
         >
           <div>
             <div className=" h-[70px] w-full border-b border-[#d6d8dd] px-4 lg:px-8 gap-2 flex items-center justify-between ">
-              <div className=" flex items-center gap-1 font-poppins ">
+              <Link href={`/`} className=" flex items-center gap-1 font-poppins ">
                 <div className=" text-[#0400ff] text-[1.8rem]  ">
                   <PiStudentBold />
                 </div>
                 <span className=" text-[1.5rem] font-medium ">EduBridge</span>
-              </div>
+              </Link>
               <div
                 onClick={() => setIsOpenSidebar(!isOpenSidebar)}
                 className=" text-[1.3rem] cursor-pointer xl:hidden flex "
@@ -161,12 +155,15 @@ const Sidebar = ({ id, isOpenSidebar, setIsOpenSidebar }: SidebarProps) => {
           </div>
 
           <div className=" px-7  ">
-            <div onClick={()=> {
-              logout()
-              toast.success("Logout Successfully!!")
-              router.push(`/admin-login`)
-            }} className=" cursor-pointer flex items-center justify-between bg-[#0400ff]/10 px-3 py-2 rounded-lg text-[#0400ff]  ">
-              <div>Log Out</div>
+            <div
+              onClick={() => {
+                logout();
+                toast.success("Logout Successfully!!");
+                router.push(`/login`);
+              }}
+              className=" cursor-pointer flex items-center justify-between bg-[#0400ff]/10 px-3 py-2 rounded-lg text-[#0400ff]  "
+            >
+              <div>Sign Out</div>
               <MdLogout />
             </div>
           </div>
@@ -293,52 +290,4 @@ const Items = ({ items, currentPath }: ItemsProps) => {
 //   );
 // };
 
-const SwitchMode = () => {
-  const [checked, setChecked] = useState(false);
 
-  const handleToggle = () => {
-    setChecked(!checked);
-  };
-
-  // useEffect(() => {
-  //   if (checked) {
-  //     document.documentElement.classList.add("dark");
-  //   } else {
-  //     document.documentElement.classList.remove("dark");
-  //   }
-  // }, [checked]);
-
-  return (
-    <div className="toggle-wrapper flex items-center pl-8">
-      <div className="toggle checkcross relative">
-        <input
-          type="checkbox"
-          className="sr-only"
-          checked={checked}
-          onChange={handleToggle}
-        />
-        <label
-          className={`toggle-item w-[5.2rem] h-9 ${
-            checked ? "bg-[#111]/20" : "bg-[#5A6ACF]/10"
-          } shadow-inner rounded-full p-1 transition-colors duration-300 cursor-pointer relative flex items-center`}
-        >
-          <span
-            className={`${
-              checked ? "justify-start" : "justify-end"
-            } flex absolute left-0 px-2 w-full text-sm font-medium text-gray-700 dark:text-gray-200 pointer-events-none`}
-          >
-            {checked ? "Dark" : "Light"}
-          </span>
-
-          <div
-            className={`check w-7 h-7 ${
-              checked ? "bg-[#111]" : "bg-[#5A6ACF]"
-            } rounded-full shadow-md transform duration-300 ${
-              checked ? "translate-x-[3.5rem]" : "translate-x-0"
-            }`}
-          ></div>
-        </label>
-      </div>
-    </div>
-  );
-};

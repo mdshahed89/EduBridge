@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import React from "react";
-import { FiSearch } from "react-icons/fi";
 import MyImg from "@/assets/MyImg.png";
 import { IoNotificationsSharp } from "react-icons/io5";
 import { BsLayoutSidebar } from "react-icons/bs";
@@ -19,7 +18,7 @@ const TopBar = ({ isOpenSidebar, setIsOpenSidebar }: TopbarProps) => {
         isOpenSidebar ? "pl-4 xl:pl-[40px]" : "xl:pl-[340px]"
       } fixed top-0 left-0 z-50 bg-[#fff] h-[70px] pr-5 xl:pr-10 flex items-center justify-between border-b  w-full transition-all duration-300 ease-in-out `}
     >
-      <div className=" w-[60%] relative flex items-center gap-6  ">
+      <div className=" w-[60%] relative flex items-center gap-4 md:gap-6  ">
         <div
           onClick={() => setIsOpenSidebar(!isOpenSidebar)}
           className=" text-[1.3rem] cursor-pointer "
@@ -40,9 +39,9 @@ const TopBar = ({ isOpenSidebar, setIsOpenSidebar }: TopbarProps) => {
         <div className=" absolute top-0 right-0 px-4 h-full flex items-center  ">
           <FiSearch className=" text-[#A6ABC8] text-[1.2rem] " />
         </div> */}
-        <h2 className=" text-[1.5rem] font-medium ">User Dashboard</h2>
+        <h2 className=" text-[1.2rem] md:text-[1.5rem] font-medium ">User Dashboard</h2>
       </div>
-      <div className=" flex items-center gap-8 ">
+      <div className=" flex items-center gap-5 md:gap-8 ">
         <div className=" relative cursor-pointer ">
           <IoNotificationsSharp className=" text-[#8ea0a8] text-[1.5rem] " />
           <div className=" absolute top-[-2px] right-0 bg-[#fff] p-[1px] rounded-full   ">

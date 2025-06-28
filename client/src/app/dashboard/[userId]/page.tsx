@@ -2,17 +2,13 @@ import React from "react";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import { BsPatchCheckFill } from "react-icons/bs";
 import { FaBookOpen } from "react-icons/fa6";
-import { GiBookshelf } from "react-icons/gi";
-import { HiUsers } from "react-icons/hi2";
 import {
   MdFavoriteBorder,
   MdLocalFireDepartment,
   MdOutlineTimer,
-  MdPersonAddAlt1,
   MdPlayCircleFilled,
 } from "react-icons/md";
-import { PiStudentFill } from "react-icons/pi";
-import { RiMoneyDollarCircleFill, RiPlayList2Fill } from "react-icons/ri";
+import { RiPlayList2Fill } from "react-icons/ri";
 
 const page = () => {
   return (
@@ -27,7 +23,7 @@ export default page;
 
 const Summary = () => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
       <SummaryCard icon={<FaBookOpen />} label="Enrolled Courses" value={5} />
       <SummaryCard
         icon={<MdPlayCircleFilled />}

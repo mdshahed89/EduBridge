@@ -5,33 +5,12 @@ import { FetchLoading } from "@/utils/Loading";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-interface OnlyFansInfo {
-  video?: number | null;
-  img?: number | null;
-  react?: number | null;
-  imgs?: string[];
-  videos?: string;
-}
+
 
 interface UserType {
   _id: string;
   email: string;
-  profileImg: string;
-  description?: string;
-  userName?: string;
   name?: string;
-  identity?: string;
-  age?: number | null;
-  nationality?: string;
-  eyeColor?: string;
-  hairColor?: string;
-  height?: string;
-  view?: number;
-  react?: number;
-  isPlanActive: boolean;
-  planDuration: number;
-  remainingDays?: number;
-  onlyFansInfo?: OnlyFansInfo;
 }
 
 interface PageProps {

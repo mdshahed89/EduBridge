@@ -30,8 +30,8 @@ export const uploadPdf = async (file: File): Promise<string | null> => {
   try {
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "images_preset"); // You can keep same preset
-    formData.append("folder", "SIDESONE/pdfNotes");     // optional: separate folder
+    formData.append("upload_preset", "images_preset"); 
+    formData.append("folder", "SIDESONE/pdfNotes");    
 
     const res = await axios.post<{ secure_url: string }>(pdfApi, formData);
     return res.data.secure_url;

@@ -1,6 +1,6 @@
 import User from "../../models/user.model.js";
 import jwt from "jsonwebtoken";
-import { calculateRemainingPlanDays, sendEmail } from "../../utils/util.js";
+import { sendEmail } from "../../utils/util.js";
 import crypto from "crypto";
 import { UAParser } from "ua-parser-js";
 

@@ -1,14 +1,12 @@
 "use client";
 
 import { useData } from "@/context/Context";
-import { uploadFile, uploadPdf, uploadVideo } from "@/utils/imageUpload";
+import { uploadPdf, uploadVideo } from "@/utils/imageUpload";
 import { FetchLoading } from "@/utils/Loading";
-import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { AiOutlineEdit, AiTwotoneDelete } from "react-icons/ai";
 import { CiEdit } from "react-icons/ci";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { FaFilePdf, FaPlay, FaPlus, FaVideo, FaXmark } from "react-icons/fa6";
@@ -191,6 +189,14 @@ const Page = () => {
 
   // console.log(lectures);
 
+  if(loading){
+      return(
+        <div className=" min-h-[20rem] relative ">
+          <FetchLoading />
+        </div>
+      )
+    }
+
   return (
     <div className=" ">
       <div className=" mb-[2rem] flex items-center justify-between ">
@@ -211,6 +217,10 @@ const Page = () => {
       <div className=" flex items-center justify-between ">
         <h3 className=" text-[1.3rem] ">All Lectures</h3>
       </div>
+
+      {
+        error && <p className=" text-sm text-red-500 mt-2 ">{error}</p>
+      }
 
       <div className=" min-h-[20rem] mt-[2rem] border p-[1rem] rounded-lg ">
         <div className=" my-3 flex justify-between gap-4 ">
@@ -248,7 +258,7 @@ const Page = () => {
           {filteredLectures.map((lecture, idx) => (
             <div
               key={idx}
-              className={` flex items-center justify-between gap-2  py-3 px-2  transition-colors duration-300 ease-in-out ${
+              className={` flex items-center justify-between gap-2  py-3   transition-colors duration-300 ease-in-out ${
                 lectures.length !== idx + 1 && "border-b"
               } `}
             >
@@ -406,7 +416,7 @@ const Page = () => {
               <video
                 src={selectedLecture.videoUrl}
                 controls
-                className="w-full h-[20rem] rounded"
+                className="w-full lg:max-h-[25rem] max-h-[20rem] rounded"
               />
             )}
 

@@ -1,8 +1,10 @@
 import express from "express";
-import { getFilteredCourses } from "../../controllers/public/course.controller.js"
+import { getAllCourses, getModulesWithLectures } from "../../controllers/public/course.controller.js"
 
 const router = express.Router();
 
-router.get('/', getFilteredCourses);
+router.get('/', getAllCourses);
+router.post("/modules-with-lectures/:courseId", getModulesWithLectures);
+
 
 export default router;
