@@ -48,10 +48,6 @@ const Page = () => {
     pdfNotes: [],
   });
   const { userData } = useData();
-  const [toastMessage, setToastMessage] = useState({
-    type: "",
-    message: "",
-  });
 
   const fetchLectures = async () => {
     if (!userData.token) {
@@ -547,17 +543,7 @@ const Page = () => {
                 Submit
               </button>
             </div>
-            {toastMessage.type && toastMessage.message && (
-              <p
-                className={` ${
-                  toastMessage.type === "Error"
-                    ? "text-red-500"
-                    : "text-green-500"
-                } `}
-              >
-                {toastMessage.message}
-              </p>
-            )}
+            
           </div>
         </div>
       )}
@@ -587,10 +573,6 @@ const LectureEditModal: React.FC<LectureEditModalProps> = ({
 }) => {
   const { userData } = useData();
   const [uploadType, setUploadType] = useState<"file" | "link">("file");
-  const [toastMessage, setToastMessage] = useState({
-    type: "",
-    message: "",
-  });
   const [formData, setFormData] = useState({
     title: selectedLecture.title,
     videoUrl: selectedLecture.videoUrl,
@@ -763,15 +745,6 @@ const LectureEditModal: React.FC<LectureEditModalProps> = ({
             Submit
           </button>
         </div>
-        {toastMessage.type && toastMessage.message && (
-          <p
-            className={` ${
-              toastMessage.type === "Error" ? "text-red-500" : "text-green-500"
-            } `}
-          >
-            {toastMessage.message}
-          </p>
-        )}
       </div>
     </div>
   );
