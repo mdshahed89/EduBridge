@@ -18,6 +18,9 @@ export default function RootLayout({
   return (
     
     <html lang="en">
+      <head>
+        <link rel="icon" href="/favicon.ico" className="rounded-full " />
+      </head>
       <body className={` font-Inter `}>
         <FormProvider >
         {children}

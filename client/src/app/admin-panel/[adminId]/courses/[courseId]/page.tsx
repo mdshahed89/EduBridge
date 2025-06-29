@@ -80,10 +80,12 @@ const Page = () => {
   }, [courseId]);
 
   const handleAddModule = async () => {
-    if (!title) return;
+    if (!title) {
+      toast.error("Title is required!!");
+      return;
+    }
 
-    setLoading(true);
-
+    const toastId = toast.loading("Adding module...");
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/module`,
@@ -100,25 +102,19 @@ const Page = () => {
       const data = await res.json();
 
       if (!res.ok) {
-        // setToast();
-        toast.error(data.message || "Failed to add module");
-        return;
+        throw new Error(data.message || "Failed to add module");
       }
 
+      toast.success("New module added successfully!", { id: toastId });
       fetchCourse();
-      toast.success("New module added successfully!!");
       setTitle("");
       setShowModal(false);
     } catch (error: unknown) {
-      let message = "Error occurred";
-
-      if (error instanceof Error && error.message) {
-        message = error.message;
-      }
-
-      toast.error(message);
-    } finally {
-      setLoading(false);
+      const message =
+        error instanceof Error && error.message
+          ? error.message
+          : "Something went wrong";
+      toast.error(message, { id: toastId });
     }
   };
 
@@ -136,11 +132,10 @@ const Page = () => {
       return;
     }
 
-    setLoading(true);
-
+    const toastId = toast.loading("Updating module...");
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/module/${selectedModule?._id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/module/${selectedModule._id}`,
         {
           method: "PUT",
           headers: {
@@ -154,13 +149,11 @@ const Page = () => {
       const data = await res.json();
 
       if (!res.ok) {
-        // setToast();
-        toast.error(data.message || "Failed to Update module");
-        return;
+        throw new Error(data.message || "Failed to update module");
       }
 
+      toast.success("Module updated successfully!", { id: toastId });
       fetchCourse();
-      toast.success("Module Update Successfully!!");
       setShowEditModal(false);
     } catch (error: unknown) {
       const message =
@@ -168,9 +161,7 @@ const Page = () => {
           ? error.message
           : "Error occurred";
 
-      toast.error(message);
-    } finally {
-      setLoading(false);
+      toast.error(message, { id: toastId });
     }
   };
 

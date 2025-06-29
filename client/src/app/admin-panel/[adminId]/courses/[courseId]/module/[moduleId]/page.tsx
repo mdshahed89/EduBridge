@@ -97,21 +97,16 @@ const Page = () => {
 
   const handleSubmitCreateLecture = async () => {
     if (!userData.token) {
-      setToastMessage({
-        type: "Error",
-        message: "Unauthorized: No token found",
-      });
+      toast.error("Unauthorized: No token found");
       return;
     }
 
     if (!formData.title || !formData.videoUrl) {
-      setToastMessage({
-        type: "Error",
-        message: "Title and Video URL are required.",
-      });
+      toast.error("Title and Video URL are required.");
       return;
     }
 
+    const toastId = toast.loading("Adding lecture...");
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/lecture`,
@@ -133,15 +128,11 @@ const Page = () => {
       const data = await res.json();
 
       if (!res.ok) {
-        setToastMessage({
-          type: "Error",
-          message: data.message || "Failed to create lecture",
-        });
-        return;
+        toast.error("Failed to  add lecture");
+        throw new Error(data.message || "Failed to add lecture");
       }
 
-      console.log("Lecture added successfully:", data);
-      toast.success("Lecture Added Successfully!!")
+      toast.success("Lecture added successfully!", { id: toastId });
       fetchLectures();
       setShowModal(false);
       setFormData({
@@ -150,19 +141,10 @@ const Page = () => {
         pdfNotes: [],
       });
     } catch (err: unknown) {
-      let message = "Something went wrong";
-
-      if (err instanceof Error) {
-        message = err.message;
-        console.error("Error creating lecture:", err.message);
-      } else {
-        console.error("Error creating lecture:", err);
-      }
-
-      setToastMessage({
-        type: "Error",
-        message,
-      });
+      const message =
+        err instanceof Error ? err.message : "Something went wrong";
+      toast.error(message, { id: toastId });
+      console.error("Error creating lecture:", err);
     }
   };
 
@@ -265,70 +247,72 @@ const Page = () => {
           </div>
         </div>
 
-        {
-          filteredLectures.length === 0 ? <div className=" text-[1.1rem] font-medium h-[7rem] flex items-center text-[#969595] ">
+        {filteredLectures.length === 0 ? (
+          <div className=" text-[1.1rem] font-medium h-[7rem] flex items-center text-[#969595] ">
             No lectures available for this module.
-          </div> : <div className=" mt-[1rem] ">
-          {filteredLectures.map((lecture, idx) => (
-            <div
-              key={idx}
-              className={` flex items-center justify-between gap-2  py-3   transition-colors duration-300 ease-in-out ${
-                lectures.length !== idx + 1 && "border-b"
-              } `}
-            >
+          </div>
+        ) : (
+          <div className=" mt-[1rem] ">
+            {filteredLectures.map((lecture, idx) => (
               <div
-                onClick={() => {
-                  setSelectedLecture(lecture);
-                  setShowDetailsModal(true);
-                }}
-                className=" flex items-center gap-2 group transition-all duration-300 ease-in-out cursor-pointer "
+                key={idx}
+                className={` flex items-center justify-between gap-2  py-3   transition-colors duration-300 ease-in-out ${
+                  lectures.length !== idx + 1 && "border-b"
+                } `}
               >
-                <div className=" p-3 rounded-full text-[#0400ff] text-[1.4rem] bg-[#0400ff]/5 group-hover:bg-[#0400ff]/10 ">
-                  <FaPlay />
-                </div>
-                <div>
-                  <div className=" group-hover:text-[#0400ff] group-hover:underline ">
-                    {lecture.title}
+                <div
+                  onClick={() => {
+                    setSelectedLecture(lecture);
+                    setShowDetailsModal(true);
+                  }}
+                  className=" flex items-center gap-2 group transition-all duration-300 ease-in-out cursor-pointer "
+                >
+                  <div className=" p-3 rounded-full text-[#0400ff] text-[1.4rem] bg-[#0400ff]/5 group-hover:bg-[#0400ff]/10 ">
+                    <FaPlay />
                   </div>
-                  {durations[lecture._id] && (
-                    <div className="text-xs text-gray-500">
-                      {durations[lecture._id]}
+                  <div>
+                    <div className=" group-hover:text-[#0400ff] group-hover:underline ">
+                      {lecture.title}
                     </div>
-                  )}
-                  <video
-                    src={lecture.videoUrl}
-                    onLoadedMetadata={(e) =>
-                      handleLoadedMetadata(e, lecture._id)
-                    }
-                    className="hidden"
-                  />
+                    {durations[lecture._id] && (
+                      <div className="text-xs text-gray-500">
+                        {durations[lecture._id]}
+                      </div>
+                    )}
+                    <video
+                      src={lecture.videoUrl}
+                      onLoadedMetadata={(e) =>
+                        handleLoadedMetadata(e, lecture._id)
+                      }
+                      className="hidden"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div className=" flex items-center gap-2 text-[1.7rem] ">
-                <div
-                  onClick={() => {
-                    setSelectedLecture(lecture);
-                    setShowEditModal(true);
-                  }}
-                  className=" cursor-pointer text-[#0400ff] p-2 rounded-full hover:bg-[#0400ff]/5 "
-                >
-                  <CiEdit />
-                </div>
-                <div
-                  onClick={() => {
-                    setSelectedLecture(lecture);
-                    setShowDeleteModal(true);
-                  }}
-                  className=" cursor-pointer text-red-500 p-2 rounded-full hover:bg-red-50 "
-                >
-                  <MdDeleteOutline />
+                <div className=" flex items-center gap-2 text-[1.7rem] ">
+                  <div
+                    onClick={() => {
+                      setSelectedLecture(lecture);
+                      setShowEditModal(true);
+                    }}
+                    className=" cursor-pointer text-[#0400ff] p-2 rounded-full hover:bg-[#0400ff]/5 "
+                  >
+                    <CiEdit />
+                  </div>
+                  <div
+                    onClick={() => {
+                      setSelectedLecture(lecture);
+                      setShowDeleteModal(true);
+                    }}
+                    className=" cursor-pointer text-red-500 p-2 rounded-full hover:bg-red-50 "
+                  >
+                    <MdDeleteOutline />
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-        }
+            ))}
+          </div>
+        )}
       </div>
 
       {showEditModal && selectedLecture && (
@@ -467,11 +451,11 @@ const Page = () => {
       {showModal && (
         <div
           className="fixed inset-0 z-[60] bg-black/40 flex items-center justify-center"
-          onClick={() => setShowModal(false)} // click outside closes modal
+          onClick={() => setShowModal(false)}
         >
           <div
             className="bg-white rounded-md p-6 w-[90%] max-w-md relative"
-            onClick={(e) => e.stopPropagation()} // prevent click inside from closing
+            onClick={(e) => e.stopPropagation()}
           >
             <h2 className="text-lg font-semibold mb-4">Add New Lecture</h2>
 
@@ -614,78 +598,57 @@ const LectureEditModal: React.FC<LectureEditModalProps> = ({
   });
 
   const handleSubmitUpdateLecture = async () => {
-    if (!selectedLecture._id) {
-      setToastMessage({
-        type: "Error",
-        message: "Something went wrong",
-      });
-      return;
-    }
+  if (!selectedLecture._id) {
+    toast.error("Something went wrong");
+    return;
+  }
 
-    if (!userData.token) {
-      setToastMessage({
-        type: "Error",
-        message: "Unauthorized: No token found",
-      });
-      return;
-    }
+  if (!userData.token) {
+    toast.error("Unauthorized: No token found");
+    return;
+  }
 
-    if (!formData.title || !formData.videoUrl) {
-      setToastMessage({
-        type: "Error",
-        message: "Title and Video URL are required.",
-      });
-      return;
-    }
+  if (!formData.title || !formData.videoUrl) {
+    toast.error("Title and Video URL are required.");
+    return;
+  }
 
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/lecture/${selectedLecture._id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${userData.token}`,
-          },
-          body: JSON.stringify({
-            title: formData.title,
-            videoUrl: formData.videoUrl,
-            pdfNotes: formData.pdfNotes || [],
-            moduleId: moduleId,
-          }),
-        }
-      );
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setToastMessage({
-          type: "Error",
-          message: data.message || "Failed to create lecture",
-        });
-        return;
+  const toastId = toast.loading("Updating lecture...");
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/lecture/${selectedLecture._id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userData.token}`,
+        },
+        body: JSON.stringify({
+          title: formData.title,
+          videoUrl: formData.videoUrl,
+          pdfNotes: formData.pdfNotes || [],
+          moduleId: moduleId,
+        }),
       }
+    );
 
-      console.log("Lecture created successfully:", data);
-      toast.success("Lecture Updated Successfully!!");
-      fetchLectures();
-      setShowEditModal(false);
-    } catch (err: unknown) {
-      let errorMessage = "Something went wrong";
+    const data = await res.json();
 
-      if (err instanceof Error) {
-        console.error("Error creating lecture:", err.message);
-        errorMessage = err.message;
-      } else {
-        console.error("Error creating lecture:", err);
-      }
-
-      setToastMessage({
-        type: "Error",
-        message: errorMessage,
-      });
+    if (!res.ok) {
+      throw new Error(data.message || "Failed to update lecture");
     }
-  };
+
+    toast.success("Lecture updated successfully!", { id: toastId });
+    fetchLectures();
+    setShowEditModal(false);
+  } catch (err: unknown) {
+    const errorMessage =
+      err instanceof Error ? err.message : "Something went wrong";
+    toast.error(errorMessage, { id: toastId });
+    console.error("Error updating lecture:", err);
+  }
+};
+
 
   return (
     <div

@@ -276,7 +276,7 @@ const Page = () => {
           <span>Back</span>
         </Link>
         <div className=" text-[1.5rem] font-medium leading-tight flex items-center justify-between gap-3 w-full ">
-          <h3 className=" line-clamp-1 ">{course?.title}</h3>
+          <h3 className=" lg:text-[1.5rem] md:text-[1.3rem] text-[1.2rem] line-clamp-1 ">{course?.title}</h3>
           <div
             onClick={() => setIsOpenModules(true)}
             className=" lg:hidden flex "

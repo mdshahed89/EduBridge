@@ -128,71 +128,65 @@ const Page = () => {
         </div>
       </div>
 
-      {courses.length === 0 ? (
-        <div className=" h-[10rem] text-center flex items-center justify-center text-[1.2rem] font-medium ">
-          There are no courses available.
-        </div>
-      ) : (
-        <div className="mt-[2rem] grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3">
-          {courses.map((course, idx) => (
-            <div
-              key={idx}
-              className="w-full rounded-lg overflow-hidden border bg-white flex flex-col relative"
-            >
-              <div className=" absolute top-2 right-2 flex items-center gap-2 text-[1.7rem] z-50 ">
-                <Link
-                  href={`/admin-panel/${adminId}/courses/${course._id}/update-course`}
-                  className=" cursor-pointer text-[#0400ff] p-2 rounded-full bg-[#fff] "
-                >
-                  <CiEdit />
-                </Link>
-                <div
-                  onClick={() => {
-                    setSelectedCourseId(course._id);
-                    setShowDeleteModal(true);
-                  }}
-                  className=" cursor-pointer text-red-500 p-2 rounded-full bg-red-50 "
-                >
-                  <MdDeleteOutline />
-                </div>
-              </div>
-              <div className="w-full h-[15rem] relative">
-                <Image
-                  src={course.thumbnail}
-                  alt="course thumbnail"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-
-              <div className="flex flex-col justify-between h-full px-2 py-2 bg-[#0400ff]/5 flex-1">
-                <div className="flex-1">
-                  <div className=" text-[1.2rem] md:text-[1.4rem] font-medium line-clamp-1">
-                    {course.title}
-                  </div>
-                  <div className="text-[#414040] line-clamp-2">
-                    {course.description}
-                  </div>
-                  <div className="flex items-center gap-2 mt-3">
-                    <span className="text-[#0400ff]">${course.price}</span>
-                    <span className="line-through text-gray-500">
-                      ${Number(course.price + course.price * 0.3).toFixed(0)}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Button */}
-                <Link
-                  href={`/admin-panel/${adminId}/courses/${course._id}`}
-                  className="mt-4 bg-[#0400ff] py-2 w-full block text-center rounded-md text-white active:scale-95 transition-all duration-300 ease-in-out"
-                >
-                  View Details
-                </Link>
+      <div className="mt-[2rem] grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3">
+        {courses.map((course, idx) => (
+          <div
+            key={idx}
+            className="w-full rounded-lg overflow-hidden border bg-white flex flex-col relative"
+          >
+            <div className=" absolute top-2 right-2 flex items-center gap-2 text-[1.7rem] z-50 ">
+              <Link
+                href={`/admin-panel/${adminId}/courses/${course._id}/update-course`}
+                className=" cursor-pointer text-[#0400ff] p-2 rounded-full bg-[#fff] "
+              >
+                <CiEdit />
+              </Link>
+              <div
+                onClick={() => {
+                  setSelectedCourseId(course._id);
+                  setShowDeleteModal(true);
+                }}
+                className=" cursor-pointer text-red-500 p-2 rounded-full bg-red-50 "
+              >
+                <MdDeleteOutline />
               </div>
             </div>
-          ))}
-        </div>
-      )}
+            <div className="w-full h-[15rem] relative">
+              <Image
+                src={course.thumbnail}
+                alt="course thumbnail"
+                fill
+                className="object-cover"
+              />
+            </div>
+
+            <div className="flex flex-col justify-between h-full px-2 py-2 bg-[#0400ff]/5 flex-1">
+              <div className="flex-1">
+                <div className=" text-[1.2rem] md:text-[1.4rem] font-medium line-clamp-1">
+                  {course.title}
+                </div>
+                <div className="text-[#414040] line-clamp-2">
+                  {course.description}
+                </div>
+                <div className="flex items-center gap-2 mt-3">
+                  <span className="text-[#0400ff]">${course.price}</span>
+                  <span className="line-through text-gray-500">
+                    ${Number(course.price + course.price * 0.3).toFixed(0)}
+                  </span>
+                </div>
+              </div>
+
+              {/* Button */}
+              <Link
+                href={`/admin-panel/${adminId}/courses/${course._id}`}
+                className="mt-4 bg-[#0400ff] py-2 w-full block text-center rounded-md text-white active:scale-95 transition-all duration-300 ease-in-out"
+              >
+                View Details
+              </Link>
+            </div>
+          </div>
+        ))}
+      </div>
 
       {showDeleteModal && selectedCourseId && (
         <div

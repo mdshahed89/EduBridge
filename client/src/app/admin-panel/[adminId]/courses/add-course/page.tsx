@@ -2,11 +2,12 @@
 
 import { useData } from "@/context/Context";
 import { uploadFile } from "@/utils/imageUpload";
-import { FetchLoading } from "@/utils/Loading";
+import { ButtonLoading, FetchLoading } from "@/utils/Loading";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { FaXmark } from "react-icons/fa6";
 import { RiArrowGoBackFill } from "react-icons/ri";
@@ -21,6 +22,7 @@ interface FormDataType {
 const Page = () => {
   const { userData } = useData();
   const { adminId } = useParams();
+  const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState<FormDataType>({
     thumbnail: "",
     title: "",
@@ -36,7 +38,7 @@ const Page = () => {
   const router = useRouter();
 
   const handleSubmitCreateCourse = async () => {
-    // e.preventDefault();
+
     console.log("hello", userData);
 
     if (!userData.token) {
@@ -59,8 +61,7 @@ const Page = () => {
       });
       return;
     }
-
-    console.log("workinng");
+    setIsLoading(true)
 
     try {
       const res = await fetch(
@@ -89,21 +90,21 @@ const Page = () => {
       if (data?._id) {
         setToastMessage({
           type: "SUCCESS",
-          message: "Course created successfully!",
+          message: "Course added successfully!!",
         });
+        toast.success("Course Added Successfully!!")
         setTimeout(() => {
           router.push(`/admin-panel/${adminId}/courses/${data._id}`);
-        }, 2000);
+        }, 1000);
+        setIsLoading(false)
       } else {
         setToastMessage({
           type: "Error",
           message: "Something Went Wrong!!",
         });
+        setIsLoading(false)
         return;
       }
-      // Show success toast
-
-      // console.log(data);
     } catch (error: unknown) {
       let message = "Failed to create course";
 
@@ -118,6 +119,9 @@ const Page = () => {
         type: "ERROR",
         message,
       });
+    }
+    finally{
+      setIsLoading(false)
     }
   };
 
@@ -188,9 +192,11 @@ const Page = () => {
           <div>
             <button
               onClick={handleSubmitCreateCourse}
-              className=" bg-[#0400ff] rounded-md py-2 text-center w-full text-[#fff] "
+              className=" relative bg-[#0400ff] rounded-md h-[2.7rem] text-center w-full text-[#fff] "
             >
-              Add Course
+              {
+                isLoading ? <ButtonLoading /> : "Add Course"
+              }
             </button>
           </div>
         </div>
@@ -263,7 +269,7 @@ const ImageUpload: React.FC<DataProps> = ({ formData, setFormData }) => {
   return (
     <div className=" flex gap-10 lg:flex-row flex-col ">
       <div className=" max-w-[30rem] h-[20rem] w-full ">
-        <div className=" relative border-2 border-[#0400ff] h-full rounded-lg overflow-hidden ">
+        <div className=" relative border-2  h-full rounded-lg overflow-hidden ">
           {loading && <FetchLoading />}
           {!loading && formData.thumbnail ? (
             <div>

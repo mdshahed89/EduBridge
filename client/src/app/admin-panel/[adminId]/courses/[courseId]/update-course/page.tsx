@@ -2,7 +2,7 @@
 
 import { useData } from "@/context/Context";
 import { uploadFile } from "@/utils/imageUpload";
-import { FetchLoading } from "@/utils/Loading";
+import { ButtonLoading, FetchLoading } from "@/utils/Loading";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -30,7 +30,7 @@ const Page = () => {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const [updating, setUpdating] = useState(false);
   const [toastMessage, setToastMessage] = useState({
     type: "",
     message: "",
@@ -40,6 +40,7 @@ const Page = () => {
 
   const fetchCourse = async () => {
     try {
+      setLoading(true);
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/course/${courseId}`,
         {
@@ -73,6 +74,7 @@ const Page = () => {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     if (userData.token && courseId) {
       fetchCourse();
@@ -102,7 +104,7 @@ const Page = () => {
       return;
     }
 
-    // console.log("workinng");
+    setUpdating(true);
 
     try {
       const res = await fetch(
@@ -127,6 +129,7 @@ const Page = () => {
       if (!res.ok) {
         // throw new Error(data.message || "Course creation failed");
         toast.error(data.message || "Course update failed");
+        setUpdating(false);
         return;
       }
 
@@ -136,15 +139,17 @@ const Page = () => {
           message: "Course Updated successfully!!",
         });
         toast.success("Course updated successfully!!");
+        setUpdating(false);
         setTimeout(() => {
           router.push(`/admin-panel/${adminId}/courses`);
-        }, 2000);
+        }, 1000);
       } else {
         setToastMessage({
           type: "Error",
           message: "Something Went Wrong!!",
         });
         toast.error("Something Went Wrong!!");
+        setUpdating(false);
         return;
       }
       // Show success toast
@@ -166,6 +171,8 @@ const Page = () => {
       });
 
       toast.error(message);
+    } finally {
+      setUpdating(false);
     }
   };
 
@@ -246,9 +253,9 @@ const Page = () => {
           <div>
             <button
               onClick={handleSubmitUpdateCourse}
-              className=" bg-[#0400ff] rounded-md py-2 text-center w-full text-[#fff] "
+              className=" relative bg-[#0400ff] rounded-md h-[2.7rem] text-center w-full text-[#fff] "
             >
-              Update Course
+              {updating ? <ButtonLoading /> : "Update Course"}
             </button>
           </div>
         </div>
@@ -321,7 +328,7 @@ const ImageUpload: React.FC<DataProps> = ({ formData, setFormData }) => {
   return (
     <div className=" flex gap-10 lg:flex-row flex-col ">
       <div className=" max-w-[30rem] h-[20rem] w-full ">
-        <div className=" relative border-2 border-[#0400ff] h-full rounded-lg overflow-hidden ">
+        <div className=" relative border-2 h-full rounded-lg overflow-hidden ">
           {loading && <FetchLoading />}
           {!loading && formData.thumbnail ? (
             <div>

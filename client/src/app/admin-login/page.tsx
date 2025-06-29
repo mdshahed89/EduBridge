@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useData } from "@/context/Context";
 import { ButtonLoading } from "@/utils/Loading";
+import toast from "react-hot-toast";
 
 export default function Page() {
   const [email, setEmail] = useState("");
@@ -94,6 +95,7 @@ export default function Page() {
 
       // console.log(data);
       setLoading(false);
+      toast.success("Login Successfully!!");
       setUserData({
         ...data?.user,
         token: data?.token,
