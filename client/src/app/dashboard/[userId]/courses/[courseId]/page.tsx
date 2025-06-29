@@ -179,7 +179,7 @@ const Page = () => {
     }
   };
 
-  console.log(enrolledCourses);
+  // console.log(enrolledCourses);
 
   if (loading)
     return (

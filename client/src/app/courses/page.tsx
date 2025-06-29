@@ -29,7 +29,7 @@ const Page = () => {
 
   const fetchCourses = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const res = await fetch(
         `${
           process.env.NEXT_PUBLIC_BACKEND_URL

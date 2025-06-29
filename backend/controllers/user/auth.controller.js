@@ -40,6 +40,10 @@ export const loginUser = async (req, res) => {
       return res.status(400).send({ error: "Invalid credentials" });
     }
 
+    if (user.role !== "User") {
+      return res.status(403).send({ error: "Access denied for this role" });
+    }
+
     const isMatch = await user.matchPassword(password);
     if (!isMatch) {
       return res.status(400).send({ error: "Invalid credentials" });
@@ -215,4 +219,3 @@ export const resetPassword = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
-

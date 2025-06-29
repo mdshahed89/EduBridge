@@ -32,11 +32,11 @@ const Page = () => {
   const fetchCourses = async () => {
     if (!userData.token) {
       setError("Unauthorized: No token found");
-      setLoading(false);
       return;
     }
 
     try {
+      setLoading(true);
       const res = await fetch(
         `${
           process.env.NEXT_PUBLIC_BACKEND_URL
@@ -54,6 +54,7 @@ const Page = () => {
       const data = await res.json();
 
       if (!res.ok) {
+        setLoading(false);
         throw new Error(data.message || "Failed to fetch lectures");
       }
 

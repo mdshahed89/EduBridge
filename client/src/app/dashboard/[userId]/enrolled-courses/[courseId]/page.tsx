@@ -276,7 +276,9 @@ const Page = () => {
           <span>Back</span>
         </Link>
         <div className=" text-[1.5rem] font-medium leading-tight flex items-center justify-between gap-3 w-full ">
-          <h3 className=" lg:text-[1.5rem] md:text-[1.3rem] text-[1.2rem] line-clamp-1 ">{course?.title}</h3>
+          <h3 className=" lg:text-[1.5rem] md:text-[1.3rem] text-[1.2rem] line-clamp-1 ">
+            {course?.title}
+          </h3>
           <div
             onClick={() => setIsOpenModules(true)}
             className=" lg:hidden flex "
@@ -359,7 +361,7 @@ const Page = () => {
               )}
           </div>
         ) : (
-          <div className=" w-full flex items-center justify-center text-[1.2rem] font-medium ">
+          <div className=" min-h-[10rem] w-full flex items-center justify-center text-[1.2rem] font-medium ">
             There are no lecture
           </div>
         )}
@@ -380,7 +382,7 @@ const Page = () => {
 
           <div className=" mb-[1rem] flex items-center justify-between gap-5 ">
             <div className=" text-[1.1rem] text-[#0400ff] text-nowrap ">
-              Running Module: {modules[Number(moduleIdx)].moduleNumber}
+              Running Module: {modules[Number(moduleIdx)]?.moduleNumber}
             </div>
             <ModuleProgress
               setToastMessage={setToastMessage}
@@ -522,7 +524,7 @@ const Page = () => {
               })}
             </div>
           ) : (
-            <div className=" mt-[2rem] text-[1.2rem] font-medium text-[#5e5e5e] ">
+            <div className=" mt-[2rem] text-[1.1rem] font-medium text-[#5e5e5e] ">
               There are no module&apos;s yet
             </div>
           )}
@@ -592,7 +594,6 @@ const ModuleProgress: React.FC<ModuleProgressProps> = ({
       const data = await res.json();
 
       // console.log("dt",userData.token);
-      
 
       if (!res.ok) {
         toast.error(data.message || "Something went wrong");
