@@ -25,6 +25,7 @@ const Courses = () => {
 
   const fetchCourses = async () => {
     try {
+      setLoading(true)
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/public/course`
       );
