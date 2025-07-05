@@ -83,13 +83,13 @@ const Page = () => {
 
   // console.log(courses);
 
-  if (loading) {
-    return (
-      <div className=" min-h-[20rem] relative ">
-        <FetchLoading />
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className=" min-h-[20rem] relative ">
+  //       <FetchLoading />
+  //     </div>
+  //   );
+  // }
 
   return (
     <div>
@@ -129,7 +129,10 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="mt-[2rem] grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3">
+      {
+        loading ? <div className=" min-h-[20rem] relative ">
+          <FetchLoading />
+        </div> : <div className="mt-[2rem] grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3">
         {courses.map((course, idx) => (
           <div
             key={idx}
@@ -188,6 +191,7 @@ const Page = () => {
           </div>
         ))}
       </div>
+      }
 
       {showDeleteModal && selectedCourseId && (
         <div

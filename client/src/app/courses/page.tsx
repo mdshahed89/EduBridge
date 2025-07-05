@@ -85,27 +85,26 @@ const Page = () => {
 
       {error && <p className=" text-sm text-red-500 mt-2  ">{error}</p>}
 
-      {loading ? (
-        <div className=" relative min-h-[20rem] ">
-          <FetchLoading />
-        </div>
-      ) : (
-        <div>
-          <div className=" mt-[4rem] flex justify-between gap-4 ">
-            <div className=" w-full  relative flex items-center gap-6  ">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search course..."
-                className=" w-full outline-none border-none py-2 pl-4 pr-[3rem] bg-[#F6F6FB] rounded-md "
-              />
-              <div className=" absolute top-0 right-0 px-4 h-full flex items-center  ">
-                <FiSearch className=" text-[#A6ABC8] text-[1.2rem] " />
-              </div>
+      <div>
+        <div className=" mt-[4rem] flex justify-between gap-4 ">
+          <div className=" w-full  relative flex items-center gap-6  ">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search course..."
+              className=" w-full outline-none border-none py-2 pl-4 pr-[3rem] bg-[#F6F6FB] rounded-md "
+            />
+            <div className=" absolute top-0 right-0 px-4 h-full flex items-center  ">
+              <FiSearch className=" text-[#A6ABC8] text-[1.2rem] " />
             </div>
           </div>
-
+        </div>
+        {loading ? (
+          <div className=" relative min-h-[20rem] ">
+            <FetchLoading />
+          </div>
+        ) : (
           <div className="mt-[2rem] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
             {courses.map((course, idx) => (
               <div
@@ -148,8 +147,8 @@ const Page = () => {
               </div>
             ))}
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

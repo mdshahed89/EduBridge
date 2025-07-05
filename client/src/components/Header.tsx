@@ -3,16 +3,18 @@
 import { useData } from "@/context/Context";
 import { PageLoading } from "@/utils/Loading";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { FiLogOut } from "react-icons/fi";
 import { HiMiniBars3BottomRight } from "react-icons/hi2";
 import { PiStudentBold } from "react-icons/pi";
 import { RxCross2 } from "react-icons/rx";
 
 const Header = () => {
-  const { userData } = useData();
+  const { userData, logout } = useData();
   const pathname = usePathname();
+  const router = useRouter();
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
 
   const [isClient, setIsClient] = useState(false);
@@ -76,10 +78,24 @@ const Header = () => {
               >
                 Dashboard
               </Link>
-              <div className=" cursor-pointer md:flex hidden line-clamp-1 border-2 border-[#0400ff] bg-[#0400ff] md:text-base text-sm px-5 md:px-7 py-2 hover:bg-transparent hover:text-[#0400ff] transition-colors duration-300 ease-in-out rounded-full text-[#fff] ">
+              <div
+                onClick={() => {
+                  logout();
+                  toast.success("Logout Successfully!!");
+                  router.push(`/login`);
+                }}
+                className=" cursor-pointer md:flex hidden line-clamp-1 border-2 border-[#0400ff] bg-[#0400ff] md:text-base text-sm px-5 md:px-7 py-2 hover:bg-transparent hover:text-[#0400ff] transition-colors duration-300 ease-in-out rounded-full text-[#fff] "
+              >
                 Sign Out
               </div>
-              <div className=" md:hidden flex text-[1.1rem] line-clamp-1 border-2 border-[#0400ff] bg-[#0400ff] md:text-base  px-2 md:px-7 py-2 hover:bg-transparent hover:text-[#0400ff] transition-colors duration-300 ease-in-out rounded-full text-[#fff] ">
+              <div
+                onClick={() => {
+                  logout();
+                  toast.success("Logout Successfully!!");
+                  router.push(`/login`);
+                }}
+                className=" md:hidden flex text-[1.1rem] line-clamp-1 border-2 border-[#0400ff] bg-[#0400ff] md:text-base  px-2 md:px-7 py-2 hover:bg-transparent hover:text-[#0400ff] transition-colors duration-300 ease-in-out rounded-full text-[#fff] "
+              >
                 <FiLogOut />
               </div>
             </div>

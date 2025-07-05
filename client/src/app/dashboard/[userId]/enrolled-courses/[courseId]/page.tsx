@@ -382,7 +382,7 @@ const Page = () => {
 
           <div className=" mb-[1rem] flex items-center justify-between gap-5 ">
             <div className=" text-[1.1rem] text-[#0400ff] text-nowrap ">
-              Running Module: {modules[Number(moduleIdx)]?.moduleNumber}
+              Running Module: {modules[Number(moduleIdx)]?.moduleNumber || "N/A"}
             </div>
             <ModuleProgress
               setToastMessage={setToastMessage}
